@@ -1,0 +1,24 @@
+---
+import type { HomepageContactSection } from '../lib/api';
+
+interface Props {
+  section: HomepageContactSection;
+}
+
+const { section } = Astro.props;
+---
+
+<section class="nf-section nf-cta" aria-label="Contact call to action">
+  <div class="nf-container">
+    <div class="nf-cta__panel">
+      <p class="nf-eyebrow nf-cta__eyebrow">{section.eyebrow}</p>
+      <h2 class="nf-cta__title">{section.headline}</h2>
+      <p class="nf-cta__copy">{section.supportingText}</p>
+      <div class="nf-cta__actions">
+        <a class="nf-button nf-button--primary nf-cta__button" href={section.buttonUrl}>
+          {section.buttonLabel}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

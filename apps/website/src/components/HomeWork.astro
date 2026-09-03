@@ -1,0 +1,63 @@
+---
+import type { HomepageWorkSection } from '../lib/api';
+import { getCaseStudies } from '../lib/api';
+import { folioLayout, padWorkIndex } from '../lib/case-study';
+
+interface Props {
+  section: HomepageWorkSection;
+}
+
+const { section } = Astro.props;
+const headline = section.headline.replace(/\n+/g, ' ').trim();
+const published = await getCaseStudies();
+const featured = published.filter((study) => study.featured).slice(0, 2);
+const studies = featured.length > 0 ? featured : published.slice(0, 2);
+---
+
+<section class="nf-section nf-work" aria-labelledby="work-heading">
+  <div class="nf-container nf-work__inner">
+    <div class="nf-work__copy">
+      <p class="nf-eyebrow">{section.eyebrow}</p>
+      <h2 class="nf-work__title" id="work-heading">{headline}</h2>
+    </div>
+    <a class="nf-work__cta" href="/case-studies">Explore work ↗</a>
+  </div>
+
+  {studies.length > 0 && (
+    <div class="nf-container nf-work__featured">
+      <ol class="nf-folio-list nf-folio-list--home">
+        {studies.map((study, index) => {
+          const layout = folioLayout(index, Boolean(study.visual));
+          return (
+            <li>
+              <article class={`nf-folio-item nf-folio-item--${layout} nf-folio-item--${study.direction}`}>
+                <a class="nf-folio-item__link" href={`/case-studies/${study.slug}`}>
+                  <p class="nf-folio-item__index">{padWorkIndex(index)}</p>
+                  <h3 class="nf-folio-item__title">{study.title}</h3>
+                  {study.summary && <p class="nf-folio-item__line">{study.summary}</p>}
+                  <p class="nf-folio-item__meta">
+                    {[study.industry, study.client].filter(Boolean).join(' · ') || 'Case study'}
+                    <span class="nf-folio-item__arrow" aria-hidden="true">↗</span>
+                  </p>
+                  {study.visual ? (
+                    <figure class="nf-folio-item__visual">
+                      <img
+                        src={study.visual.url}
+                        alt={study.visual.altText ?? ''}
+                        width={study.visual.width ?? 1600}
+                        height={study.visual.height ?? 900}
+                        loading="lazy"
+                        decoding="async"
+                        sizes="(min-width: 1024px) 60vw, 100vw"
+                      />
+                    </figure>
+                  ) : null}
+                </a>
+              </article>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  )}
+</section>

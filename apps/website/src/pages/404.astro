@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteBase } from '../lib/site';
+
+const siteBase = getSiteBase(Astro.site);
+---
+
+<BaseLayout
+  title="Page not found | Novaflow"
+  description="The page you were looking for does not exist or has moved."
+  canonical={`${siteBase}/404`}
+  robots="noindex,follow"
+>
+  <div class="nf-page-shell">
+    <Navbar />
+
+    <main id="main-content" class="nf-page">
+      <section class="nf-section">
+        <div class="nf-container">
+          <div class="nf-404">
+            <p class="nf-eyebrow">404</p>
+            <h1 class="nf-heading-xl">PAGE NOT FOUND.</h1>
+            <p class="nf-body-lg">The page you were looking for does not exist or has moved.</p>
+            <div class="nf-cta__actions">
+              <a class="nf-button nf-button--primary" href="/">Back to Novaflow ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </div>
+</BaseLayout>

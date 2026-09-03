@@ -1,0 +1,127 @@
+---
+import ArticleBody from './ArticleBody.astro';
+import { formatInsightDate } from '../lib/article-content';
+import type { InsightArticle } from '../lib/api';
+
+interface Props {
+  article: InsightArticle;
+  siteBase: string;
+  socialLinks: Record<string, string>;
+  preview?: boolean;
+}
+
+const { article, siteBase, socialLinks, preview = false } = Astro.props;
+const pageUrl = `${siteBase}/insights/${article.slug}`;
+const showUpdated =
+  Boolean(article.publishedAt && article.updatedAt) &&
+  new Date(article.updatedAt).getTime() - new Date(article.publishedAt ?? article.updatedAt).getTime() > 1000 * 60 * 60 * 12;
+const linkedIn = socialLinks.linkedin?.trim();
+const x = socialLinks.x?.trim();
+const shareText = encodeURIComponent(article.title);
+const shareUrl = encodeURIComponent(pageUrl);
+---
+
+<article class="nf-ins-article" data-insights-article>
+  {preview && (
+    <p class="nf-ins-draft" role="status">Draft preview — not indexed</p>
+  )}
+
+  <header class="nf-ins-article__hero">
+    <div class="nf-container nf-ins-article__intro">
+      {article.category && <p class="nf-ins-article__category">{article.category.name}</p>}
+      <h1 class="nf-ins-article__title">{article.title}</h1>
+      {article.excerpt && <p class="nf-ins-article__excerpt">{article.excerpt}</p>}
+      <p class="nf-ins-article__meta">
+        {article.publishedAt && <time datetime={article.publishedAt}>{formatInsightDate(article.publishedAt)}</time>}
+        {article.publishedAt && <span aria-hidden="true"> · </span>}
+        <span>{article.readingTime} min</span>
+        {showUpdated && (
+          <>
+            <span aria-hidden="true"> · </span>
+            <span>Updated {formatInsightDate(article.updatedAt)}</span>
+          </>
+        )}
+      </p>
+    </div>
+
+    {article.hero && (
+      <figure class="nf-ins-article__visual">
+        <img
+          src={article.hero.url}
+          alt={article.hero.altText ?? ''}
+          width={article.hero.width ?? 1600}
+          height={article.hero.height ?? 900}
+          fetchpriority="high"
+          decoding="async"
+          sizes="100vw"
+        />
+      </figure>
+    )}
+  </header>
+
+  <div class="nf-ins-article__content">
+    <ArticleBody content={article.content} />
+
+    {(linkedIn || x) && (
+      <p class="nf-ins-share">
+        <button type="button" class="nf-ins-share__link" data-copy-link={pageUrl}>Copy link</button>
+        {linkedIn && (
+          <a class="nf-ins-share__link" href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`} target="_blank" rel="noreferrer">LinkedIn</a>
+        )}
+        {x && (
+          <a class="nf-ins-share__link" href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareText}`} target="_blank" rel="noreferrer">X</a>
+        )}
+      </p>
+    )}
+    {!linkedIn && !x && (
+      <p class="nf-ins-share">
+        <button type="button" class="nf-ins-share__link" data-copy-link={pageUrl}>Copy link</button>
+      </p>
+    )}
+
+    {article.relatedProducts.length > 0 && (
+      <aside class="nf-ins-context" aria-label="Related product">
+        <p class="nf-ins-context__label">Related product</p>
+        {article.relatedProducts.slice(0, 1).map((product) => (
+          <a class="nf-ins-context__link" href={`/products/${product.slug}`}>
+            {product.name} <span aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </aside>
+    )}
+
+    {article.relatedIndustries.length > 0 && (
+      <p class="nf-ins-context nf-ins-context--meta">
+        {article.relatedIndustries.map((industry) => (
+          <a href={`/industries/${industry.slug}`}>{industry.name}</a>
+        ))}
+      </p>
+    )}
+  </div>
+
+  {article.related.length > 0 && (
+    <section class="nf-ins-related" aria-labelledby="related-insights-heading">
+      <div class="nf-container">
+        <p class="nf-ins-related__label" id="related-insights-heading">Related</p>
+        <ul class="nf-ins-related__list">
+          {article.related.map((item) => (
+            <li>
+              <a href={`/insights/${item.slug}`}>
+                <span>{item.title}</span>
+                <small>{item.categoryName ?? 'Insights'} · {item.readingTime} min</small>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="nf-ins-cta" aria-label="Start a project">
+    <div class="nf-container">
+      <h2>Let's build.</h2>
+      <p>If this has you thinking about a system you need, start a conversation.</p>
+      <a href="/contact">Start a project ↗</a>
+    </div>
+  </section>
+</article>

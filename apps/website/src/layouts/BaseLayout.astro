@@ -1,0 +1,89 @@
+---
+import '../styles/design-system.css';
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/700.css';
+import '@fontsource/story-script/400.css';
+import { absoluteUrl, canonicalUrl, getSiteBase } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  canonical?: string;
+  robots?: string;
+  ogType?: string;
+  rssHref?: string;
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown>> | null;
+}
+
+const {
+  title = 'Novaflow',
+  description = 'Software systems built around the way businesses actually work.',
+  ogImage = '/images/og-default.jpg',
+  ogTitle,
+  ogDescription,
+  canonical,
+  robots = 'index,follow',
+  ogType = 'website',
+  rssHref = '',
+  structuredData = null,
+} = Astro.props as Props;
+
+const siteBase = getSiteBase(Astro.site);
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const resolvedCanonical = canonicalUrl(canonical ?? (pathname === '/' ? siteBase : `${siteBase}${pathname}`), siteBase);
+const absoluteOgImage = absoluteUrl(ogImage, siteBase);
+const finalTitle = title.includes('Novaflow') ? title : `${title} | Novaflow`;
+const socialTitle = ogTitle?.trim() || finalTitle;
+const socialDescription = ogDescription?.trim() || description;
+const absoluteRss = rssHref ? absoluteUrl(rssHref, siteBase) : '';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#F6F5F1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Novaflow" />
+    <meta property="og:url" content={resolvedCanonical} />
+    <meta property="og:title" content={socialTitle} />
+    <meta property="og:description" content={socialDescription} />
+    <meta property="og:image" content={absoluteOgImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={socialTitle} />
+    <meta name="twitter:description" content={socialDescription} />
+    <meta name="twitter:image" content={absoluteOgImage} />
+    <link rel="canonical" href={resolvedCanonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icons/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180" />
+    {absoluteRss && <link rel="alternate" type="application/rss+xml" title="Novaflow Insights" href={absoluteRss} />}
+    <title>{finalTitle}</title>
+    <style>
+      @font-face {
+        font-family: 'Gavency';
+        src: local('Gavency'), local('Gavency-Regular');
+        font-style: normal;
+        font-weight: 400 700;
+        font-display: swap;
+      }
+    </style>
+    {structuredData && (
+      <script
+        type="application/ld+json"
+        is:inline
+        set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')}
+      />
+    )}
+  </head>
+  <body>
+    <a class="nf-skip-link" href="#main-content">Skip to content</a>
+    <slot />
+  </body>
+</html>

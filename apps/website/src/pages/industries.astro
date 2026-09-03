@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { getIndustries } from '../lib/api';
+import { getSiteBase } from '../lib/site';
+
+const industries = await getIndustries();
+const siteBase = getSiteBase(Astro.site);
+---
+
+<BaseLayout
+  title="Industries | Novaflow"
+  description="Technology systems built for retail, pharmacy, ISP, aviation, hospitality and professional services."
+  canonical={`${siteBase}/industries`}
+>
+  <div class="nf-page-shell nf-page-shell--industries-index">
+    <Navbar />
+    <main id="main-content" class="nf-page nf-page--industries-index">
+      <section class="nf-id-index" aria-labelledby="industries-index-heading">
+        <div class="nf-container nf-id-index__inner">
+          <header class="nf-id-index__intro">
+            <p class="nf-id-index__eyebrow">INDUSTRIES</p>
+            <h1 class="nf-id-index__title" id="industries-index-heading">WHO WE BUILD FOR.</h1>
+            <p class="nf-id-index__copy">Operational systems shaped by the realities of each industry.</p>
+          </header>
+
+          <nav class="nf-id-index__list" aria-label="Industry list">
+            {industries.map((industry) => (
+              <a class="nf-id-index__item" href={`/industries/${industry.slug}`}>
+                <span class="nf-id-index__name">{industry.name.toUpperCase()}</span>
+                <span class="nf-id-index__arrow" aria-hidden="true">↗</span>
+              </a>
+            ))}
+          </nav>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </div>
+</BaseLayout>

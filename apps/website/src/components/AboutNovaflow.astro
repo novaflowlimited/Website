@@ -1,0 +1,56 @@
+---
+import type { HomepageAboutSection } from '../lib/api';
+
+interface Props {
+  section: HomepageAboutSection;
+}
+
+const { section } = Astro.props;
+---
+
+<section class="nf-about" aria-labelledby="about-heading">
+  <div class="nf-container">
+    <div class="nf-about__inner">
+      <div class="nf-about__text">
+        <p class="nf-about__eyebrow">{section.eyebrow}</p>
+
+        <h2 class="nf-about__title" id="about-heading">
+          {section.headlineLines.map((line) => (
+            <span class="nf-about__title-line">{line}</span>
+          ))}
+        </h2>
+
+        <p class="nf-about__copy">{section.shortDescription}</p>
+
+        <div class="nf-about__meta-row" aria-label="Core company capabilities">
+          <span>{section.metaLine}</span>
+        </div>
+
+        <a class="nf-about__link" href={section.linkUrl}>{section.linkLabel}</a>
+      </div>
+
+      <div class="nf-about__visual" aria-label="Novaflow systems visual">
+        {section.visual ? (
+          <img
+            src={section.visual.url}
+            alt={section.visual.altText ?? section.visual.title ?? 'Novaflow systems visual'}
+            width={section.visual.width ?? undefined}
+            height={section.visual.height ?? undefined}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div class="nf-about__visual-shell" aria-hidden="true">
+            <p class="nf-about__visual-label">Systems</p>
+            <ul class="nf-about__visual-list">
+              <li>Billing</li>
+              <li>Operations</li>
+              <li>Automation</li>
+              <li>Software</li>
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteSettings } from '../lib/api';
+import {
+  BUDGET_OPTIONS,
+  PROJECT_TYPE_OPTIONS,
+  TIMELINE_OPTIONS,
+} from '../lib/contact-context';
+import { getSiteBase } from '../lib/site';
+
+const siteBase = getSiteBase(Astro.site);
+const settings = await getSiteSettings();
+
+const contactEmail = settings?.contactEmail?.trim() || null;
+const contactPhone = settings?.contactPhone?.trim() || null;
+const address = settings?.address?.trim() || null;
+const hasDetails = Boolean(contactEmail || contactPhone || address);
+---
+
+<BaseLayout
+  title="Contact | Novaflow"
+  description="Start a project with Novaflow. Tell us what you're trying to build."
+  canonical={`${siteBase}/contact`}
+  ogImage="/images/og-default.jpg"
+>
+  <div class="nf-page-shell nf-page-shell--contact">
+    <Navbar />
+    <main id="main-content" class="nf-page nf-page--contact">
+      <section class="nf-contact" data-contact-page aria-labelledby="contact-heading">
+        <div class="nf-container nf-contact__layout">
+          <header class="nf-contact__intro">
+            <p class="nf-contact__eyebrow">06 / CONTACT</p>
+            <h1 class="nf-contact__title" id="contact-heading">Start a project</h1>
+            <p class="nf-contact__line">Tell us what you're trying to build.</p>
+
+            {hasDetails && (
+              <ul class="nf-contact__details" aria-label="Contact details">
+                {contactEmail && (
+                  <li>
+                    <span>Email</span>
+                    <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
+                  </li>
+                )}
+                {contactPhone && (
+                  <li>
+                    <span>Phone</span>
+                    <a href={`tel:${contactPhone.replace(/\s+/g, '')}`}>{contactPhone}</a>
+                  </li>
+                )}
+                {address && (
+                  <li>
+                    <span>Location</span>
+                    <span>{address}</span>
+                  </li>
+                )}
+              </ul>
+            )}
+
+            <p class="nf-contact__context" data-contact-context hidden></p>
+          </header>
+
+          <div class="nf-contact__main">
+            <div class="nf-contact__form-panel" data-contact-form-panel>
+              <form
+                id="contact-form"
+                class="nf-contact-form"
+                novalidate
+                data-source="contact"
+              >
+                <input type="hidden" name="source" value="contact" data-contact-source />
+
+                <div class="nf-contact-form__field">
+                  <label for="name">Name</label>
+                  <input id="name" name="name" type="text" autocomplete="name" placeholder="Your name" required maxlength="120" />
+                  <p class="nf-contact-form__error" data-field-error="name" hidden></p>
+                </div>
+
+                <div class="nf-contact-form__field">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required maxlength="255" />
+                  <p class="nf-contact-form__error" data-field-error="email" hidden></p>
+                </div>
+
+                <div class="nf-contact-form__field">
+                  <label for="company">Company <span class="nf-contact-form__optional">Optional</span></label>
+                  <input id="company" name="company" type="text" autocomplete="organization" placeholder="Company / organization" maxlength="120" />
+                </div>
+
+                <div class="nf-contact-form__field">
+                  <label for="projectType">What are you building?</label>
+                  <select id="projectType" name="projectType">
+                    <option value="">Select a type</option>
+                    {PROJECT_TYPE_OPTIONS.map((option) => (
+                      <option value={option.value}>{option.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div class="nf-contact-form__field">
+                  <label for="message">Project description</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="5"
+                    placeholder="Tell us what you need the system to do."
+                    required
+                    maxlength="2000"
+                  ></textarea>
+                  <p class="nf-contact-form__error" data-field-error="message" hidden></p>
+                </div>
+
+                <div class="nf-contact-form__row">
+                  <div class="nf-contact-form__field">
+                    <label for="budgetRange">Budget <span class="nf-contact-form__optional">Optional</span></label>
+                    <select id="budgetRange" name="budgetRange">
+                      <option value="">Select a range</option>
+                      {BUDGET_OPTIONS.map((option) => (
+                        <option value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div class="nf-contact-form__field">
+                    <label for="timeline">Timeline <span class="nf-contact-form__optional">Optional</span></label>
+                    <select id="timeline" name="timeline">
+                      <option value="">Select a timeline</option>
+                      {TIMELINE_OPTIONS.map((option) => (
+                        <option value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="nf-form__honeypot" aria-hidden="true">
+                  <label for="website">Company website</label>
+                  <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+                </div>
+
+                <button class="nf-button nf-button--primary nf-contact-form__submit" type="submit">
+                  Send enquiry
+                </button>
+                <p id="contact-form-status" class="nf-form__status" role="status" aria-live="polite"></p>
+              </form>
+            </div>
+
+            <div
+              class="nf-contact-success"
+              data-contact-success
+              hidden
+              tabindex="-1"
+              role="status"
+              aria-live="polite"
+            >
+              <p class="nf-contact-success__eyebrow">Enquiry</p>
+              <h2 class="nf-contact-success__title">Received.</h2>
+              <p class="nf-contact-success__copy">We'll review the project and get back to you.</p>
+              <div class="nf-contact-success__actions">
+                <a class="nf-button nf-button--primary" href="/">Back to Novaflow ↗</a>
+                <button type="button" class="nf-button" data-contact-another>Send another enquiry</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </div>
+  <script>
+    import '../scripts/contact-form.ts';
+  </script>
+</BaseLayout>

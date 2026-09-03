@@ -1,0 +1,273 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteBase } from '../lib/site';
+
+const siteBase = getSiteBase(Astro.site);
+---
+
+<BaseLayout
+  title="Design System | Novaflow"
+  description="Novaflow typography system reference page."
+  canonical={`${siteBase}/design-system`}
+  robots="noindex,nofollow"
+>
+  <div class="nf-page-shell">
+    <Navbar />
+
+    <main id="main-content" class="nf-page">
+      <section class="nf-section">
+        <div class="nf-container">
+          <div class="nf-stack" style="gap: 1.5rem;">
+            <span class="nf-eyebrow">Typography system</span>
+            <h1 class="nf-display">A deliberate type pairing for the Novaflow brand.</h1>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-section">
+        <div class="nf-container">
+          <div class="nf-grid nf-grid--12" style="grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem;">
+            <div class="nf-grid" style="grid-column: 1 / span 12; gap: 1rem;">
+              <div class="nf-section-number">
+                <span class="nf-section-number__index">01</span>
+                <span class="nf-section-number__label">Selected display face</span>
+              </div>
+            </div>
+
+            <div class="nf-card" style="grid-column: 1 / span 5; min-height: 12rem;">
+              <p class="nf-body-sm">Primary display</p>
+              <h2 class="nf-heading-lg" style="font-family: 'Gavency', 'Segoe UI', sans-serif;">Gavency</h2>
+              <p class="nf-body-sm">Chosen for uppercase clarity, confident rhythm, and technology-forward editorial character.</p>
+            </div>
+
+            <div class="nf-card" style="grid-column: 6 / span 7; min-height: 12rem;">
+              <p class="nf-body-sm">Functional system</p>
+              <h3 class="nf-heading-md" style="font-family: 'DM Sans', 'Segoe UI', sans-serif;">DM Sans</h3>
+              <p class="nf-body-sm">Used for navigation, body text, metadata, forms, buttons and CMS interfaces to maintain usability and clarity.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-section">
+        <div class="nf-container">
+          <div class="nf-grid nf-grid--12" style="grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem;">
+            <div class="nf-grid" style="grid-column: 1 / span 12; gap: 1rem;">
+              <div class="nf-section-number">
+                <span class="nf-section-number__index">02</span>
+                <span class="nf-section-number__label">Font comparison</span>
+              </div>
+            </div>
+
+            <div class="nf-font-demo nf-font-demo--dm" style="grid-column: 1 / span 4;">
+              <span class="nf-body-sm">DM Sans</span>
+              <div style="font-size: clamp(2.2rem, 4vw, 4rem); line-height: 0.9; letter-spacing: -0.08em;">BUILD</div>
+              <div style="font-size: clamp(1.7rem, 2.8vw, 3rem); line-height: 0.9; letter-spacing: -0.04em;">AUTOMATE MORE</div>
+            </div>
+
+            <div class="nf-font-demo nf-font-demo--display" style="grid-column: 5 / span 4;">
+              <span class="nf-body-sm">Gavency</span>
+              <div style="font-size: clamp(2.2rem, 4vw, 4rem); line-height: 0.9;">BUILD</div>
+              <div style="font-size: clamp(1.7rem, 2.8vw, 3rem); line-height: 0.9;">AUTOMATE</div>
+            </div>
+
+            <div class="nf-font-demo" style="grid-column: 9 / span 4; font-family: 'Chilax', 'Segoe UI', sans-serif; letter-spacing: -0.08em; font-weight: 600;">
+              <span class="nf-body-sm">Chilax</span>
+              <div style="font-size: clamp(2.2rem, 4vw, 4rem); line-height: 0.9;">BUILD</div>
+              <div style="font-size: clamp(1.7rem, 2.8vw, 3rem); line-height: 0.9;">AUTOMATE</div>
+            </div>
+
+            <div class="nf-font-demo nf-font-demo--branch" style="grid-column: 1 / span 4;">
+              <span class="nf-body-sm">Branch Modern Ligature</span>
+              <div style="font-size: clamp(2.2rem, 4vw, 4rem); line-height: 0.9;">SYSTEMS</div>
+              <div style="font-size: clamp(1.3rem, 2vw, 2rem); line-height: 0.9;">LIGATURE</div>
+            </div>
+
+            <div class="nf-font-demo nf-font-demo--art" style="grid-column: 5 / span 4;">
+              <span class="nf-body-sm">Luthern</span>
+              <div style="font-size: clamp(2.2rem, 4vw, 4rem); line-height: 0.9;">WHAT</div>
+              <div style="font-size: clamp(1.3rem, 2vw, 2rem); line-height: 0.9;">WE BUILD</div>
+            </div>
+
+            <div class="nf-font-demo nf-font-demo--art" style="grid-column: 9 / span 4; font-family: 'Southarland Duo', 'Georgia', serif;">
+              <span class="nf-body-sm">Southarland Duo</span>
+              <div style="font-size: clamp(2.2rem, 4vw, 4rem); line-height: 0.9;">BUILD</div>
+              <div style="font-size: clamp(1.3rem, 2vw, 2rem); line-height: 0.9;">MORE</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-section">
+        <div class="nf-container">
+          <div class="nf-grid" style="grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem;">
+            <div class="nf-grid" style="grid-column: 1 / span 12; gap: 1rem;">
+              <div class="nf-section-number">
+                <span class="nf-section-number__index">03</span>
+                <span class="nf-section-number__label">Brand hierarchy</span>
+              </div>
+            </div>
+
+            <div class="nf-card" style="grid-column: 1 / span 3; min-height: 11rem;">
+              <p class="nf-body-sm">Level 1</p>
+              <p class="nf-body-sm" style="font-family: 'DM Sans', sans-serif; font-size: 1.1rem; font-weight: 700;">DM Sans</p>
+              <p class="nf-body-sm">Functional</p>
+            </div>
+
+            <div class="nf-card" style="grid-column: 4 / span 3; min-height: 11rem;">
+              <p class="nf-body-sm">Level 2</p>
+              <p class="nf-body-sm" style="font-family: 'Gavency', sans-serif; font-size: 1.3rem; font-weight: 700;">Gavency</p>
+              <p class="nf-body-sm">Primary display</p>
+            </div>
+
+            <div class="nf-card" style="grid-column: 7 / span 3; min-height: 11rem;">
+              <p class="nf-body-sm">Level 3</p>
+              <p class="nf-body-sm" style="font-family: 'Branch Modern Ligature', sans-serif; font-size: 1.3rem; font-weight: 700;">SYSTEMS</p>
+              <p class="nf-body-sm">Special moment</p>
+            </div>
+
+            <div class="nf-card" style="grid-column: 10 / span 3; min-height: 11rem;">
+              <p class="nf-body-sm">Level 4</p>
+              <p class="nf-body-sm" style="font-family: 'Luthern', sans-serif; font-size: 1.2rem; font-weight: 700;">Accent</p>
+              <p class="nf-body-sm">Selective use</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-section">
+        <div class="nf-container">
+          <div class="nf-grid nf-grid--12" style="grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem;">
+            <div class="nf-grid" style="grid-column: 1 / span 12; gap: 1rem;">
+              <div class="nf-section-number">
+                <span class="nf-section-number__index">04</span>
+                <span class="nf-section-number__label">Hero + service composition</span>
+              </div>
+            </div>
+
+            <div class="nf-grid" style="grid-column: 1 / span 6; gap: 1rem;">
+              <h2 class="nf-heading-xl" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase;">BUILD</h2>
+              <h2 class="nf-heading-xl" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase;">LESS.</h2>
+              <h2 class="nf-heading-xl" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase; color: var(--nf-navy);">AUTOMATE</h2>
+              <h2 class="nf-heading-xl" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase; color: var(--nf-orange);">MORE.</h2>
+            </div>
+
+            <div class="nf-grid" style="grid-column: 7 / span 6; gap: 1rem;">
+              <p class="nf-body-sm" style="font-family: 'DM Sans', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--nf-muted);">What we build</p>
+              <h3 class="nf-heading-lg" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase;">POS systems</h3>
+              <p class="nf-body-lg" style="font-family: 'DM Sans', sans-serif;">Sales. Inventory. Payments. The operational layer that keeps growth moving.</p>
+              <h3 class="nf-heading-md" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase;">Business systems</h3>
+              <p class="nf-body" style="font-family: 'DM Sans', sans-serif;">Simple control, better decisions, and cleaner execution across teams.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-section">
+        <div class="nf-container">
+          <div class="nf-grid" style="grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem;">
+            <div class="nf-grid" style="grid-column: 1 / span 12; gap: 1rem;">
+              <div class="nf-section-number">
+                <span class="nf-section-number__index">05</span>
+                <span class="nf-section-number__label">Editorial language</span>
+              </div>
+            </div>
+
+            <div class="nf-card" style="grid-column: 1 / span 4; min-height: 14rem;">
+              <p class="nf-body-sm" style="font-family: 'DM Sans', sans-serif; letter-spacing: 0.12em; text-transform: uppercase;">01 / WHAT WE BUILD</p>
+              <h3 class="nf-heading-lg" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase;">WHAT</h3>
+              <h3 class="nf-heading-lg" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase; color: var(--nf-navy);">WE</h3>
+              <h3 class="nf-heading-lg" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase;">BUILD</h3>
+            </div>
+
+            <div class="nf-card" style="grid-column: 5 / span 4; min-height: 14rem;">
+              <p class="nf-body-sm" style="font-family: 'DM Sans', sans-serif; letter-spacing: 0.12em; text-transform: uppercase;">Service title</p>
+              <h3 class="nf-heading-md" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase;">POS</h3>
+              <h3 class="nf-heading-md" style="font-family: 'Gavency', 'Segoe UI', sans-serif; text-transform: uppercase; color: var(--nf-navy);">SYSTEMS</h3>
+            </div>
+
+            <div class="nf-card" style="grid-column: 9 / span 4; min-height: 14rem;">
+              <p class="nf-body-sm" style="font-family: 'DM Sans', sans-serif; letter-spacing: 0.12em; text-transform: uppercase;">Accent word</p>
+              <h3 class="nf-heading-sm" style="font-family: 'Branch Modern Ligature', 'Segoe UI', sans-serif; text-transform: uppercase; font-feature-settings: 'liga' 1, 'calt' 1;">SYSTEMS</h3>
+              <p class="nf-body-sm">Used sparingly for short highlighted phrases and campaign moments.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-section">
+        <div class="nf-container">
+          <div class="nf-grid" style="grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem;">
+            <div class="nf-grid" style="grid-column: 1 / span 12; gap: 1rem;">
+              <div class="nf-section-number">
+                <span class="nf-section-number__index">06</span>
+                <span class="nf-section-number__label">Responsive / mobile</span>
+              </div>
+            </div>
+
+            <div class="nf-device-preview" style="grid-column: 1 / span 6;">
+              <div class="nf-device-preview__header"><span>Desktop</span><span>72–160px</span></div>
+              <div class="nf-device-preview__frame">
+                <div class="nf-hero-wordmark" style="font-size: clamp(4.25rem, 7vw, 8rem);">BUILD</div>
+                <div class="nf-hero-wordmark nf-hero-wordmark--accent" style="font-size: clamp(3.6rem, 7vw, 8rem);">LESS.</div>
+                <div class="nf-hero-wordmark nf-hero-wordmark--navy" style="font-size: clamp(4.5rem, 8vw, 9rem);">AUTOMATE</div>
+                <div class="nf-hero-wordmark nf-hero-wordmark--accent" style="font-size: clamp(4.2rem, 7vw, 8rem);">MORE.</div>
+              </div>
+            </div>
+
+            <div class="nf-device-preview" style="grid-column: 7 / span 6;">
+              <div class="nf-device-preview__header"><span>Mobile</span><span>48–80px</span></div>
+              <div class="nf-device-preview__frame">
+                <div class="nf-hero-wordmark" style="font-size: clamp(2.8rem, 12vw, 4.8rem);">BUILD</div>
+                <div class="nf-hero-wordmark nf-hero-wordmark--accent" style="font-size: clamp(2.5rem, 11vw, 4.6rem);">LESS.</div>
+                <div class="nf-hero-wordmark nf-hero-wordmark--navy" style="font-size: clamp(3rem, 12vw, 5rem); line-height: 0.86;">AUTOMATE</div>
+                <div class="nf-hero-wordmark nf-hero-wordmark--accent" style="font-size: clamp(2.9rem, 11vw, 4.8rem);">MORE.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-section">
+        <div class="nf-container">
+          <div class="nf-grid nf-grid--12" style="grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1.5rem;">
+            <div class="nf-grid" style="grid-column: 1 / span 12; gap: 1rem;">
+              <div class="nf-section-number">
+                <span class="nf-section-number__index">07</span>
+                <span class="nf-section-number__label">Color + type</span>
+              </div>
+            </div>
+
+            <div class="nf-card" style="grid-column: 1 / span 4; min-height: 10rem; background: #f6f5f1;">
+              <p class="nf-body-sm">Warm background</p>
+              <h3 class="nf-heading-sm" style="font-family: 'Gavency', 'Segoe UI', sans-serif;">BUILD</h3>
+            </div>
+
+            <div class="nf-card" style="grid-column: 5 / span 4; min-height: 10rem; background: #1b2a7a; color: white; border-color: #1b2a7a;">
+              <p class="nf-body-sm" style="color: rgba(255,255,255,0.72);">Navy accent</p>
+              <h3 class="nf-heading-sm" style="font-family: 'Gavency', 'Segoe UI', sans-serif; color: white;">SYSTEMS</h3>
+            </div>
+
+            <div class="nf-card" style="grid-column: 9 / span 4; min-height: 10rem; background: #ff6b00; color: white; border-color: #ff6b00;">
+              <p class="nf-body-sm" style="color: rgba(255,255,255,0.72);">Orange accent</p>
+              <h3 class="nf-heading-sm" style="font-family: 'Gavency', 'Segoe UI', sans-serif; color: white;">MORE.</h3>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="nf-section">
+        <div class="nf-container">
+          <div class="nf-card" style="padding: 1.5rem;">
+            <p class="nf-body-sm" style="font-family: 'DM Sans', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: var(--nf-muted);">Production note</p>
+            <p class="nf-body">The Novaflow system is configured to use DM Sans as the functional workhorse and Gavency as the primary display face. The creative display fonts in the requested set—Gavency, Chilax, Branch Modern Ligature, Luthern, and Southarland Duo—are prepared in the brand architecture, but licensed font files are not yet present in the project. They should be added to the public font asset path before final production deployment as self-hosted files, with @font-face declarations and only the required weights loaded.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </div>
+</BaseLayout>

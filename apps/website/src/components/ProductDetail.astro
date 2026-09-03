@@ -1,0 +1,253 @@
+---
+import type { ProductDetail } from '../lib/api';
+import { productConnects } from '../lib/api';
+import ProductInterface from './ProductInterface.astro';
+import { contactHref } from '../lib/contact-context';
+
+interface Props {
+  product: ProductDetail;
+}
+
+const { product } = Astro.props;
+const projectContactHref = contactHref(product.slug);
+
+const slugTheme =
+  product.slug === 'bytepesa' ? 'bytepesa' : product.slug === 'techlane' ? 'techlane' : 'apinai';
+
+const connects = productConnects(product);
+
+const galleryFocus: Record<string, string[]> = {
+  bytepesa: ['subscribers', 'billing', 'payments', 'usage'],
+  techlane: ['product', 'payment', 'receipt'],
+  'apinai-air': ['search', 'booking', 'ticket'],
+};
+
+const mobilePanels = galleryFocus[product.slug] ?? [];
+
+const featureList = product.features.length > 0 ? product.features : connects;
+---
+
+<article class={`nf-pd nf-pd--${slugTheme}`} data-product-slug={product.slug}>
+  <header class="nf-pd-hero">
+    <div class="nf-container nf-pd-hero__inner">
+      <nav class="nf-pd-nav" aria-label="Product navigation">
+        <a class="nf-pd-nav__link" href="/products">Products ↗</a>
+      </nav>
+
+      <div class="nf-pd-hero__content">
+        <p class="nf-pd-hero__index">01 / PRODUCT</p>
+        <h1 class="nf-pd-hero__name">{product.name.toUpperCase()}</h1>
+        {product.category && <p class="nf-pd-hero__category">{product.category.toUpperCase()}</p>}
+        {product.shortDescription && <p class="nf-pd-hero__statement">{product.shortDescription}</p>}
+      </div>
+
+      <div class="nf-pd-hero__visual" aria-label={`${product.name} interface`}>
+        {product.hero?.url ? (
+          <img
+            class="nf-pd-hero__image"
+            src={product.hero.url}
+            alt={product.hero.altText ?? `${product.name} interface`}
+            width={product.hero.width ?? 1600}
+            height={product.hero.height ?? 980}
+            loading="eager"
+            decoding="async"
+          />
+        ) : (
+          <ProductInterface slug={product.slug} variant="hero" />
+        )}
+      </div>
+
+      <a class="nf-pd-hero__scroll" href="#problem">
+        <span>Explore the system</span>
+        <span aria-hidden="true">↓</span>
+      </a>
+    </div>
+  </header>
+
+  <section class="nf-pd-section nf-pd-problem" id="problem" aria-labelledby="problem-heading">
+    <div class="nf-container nf-pd-problem__grid">
+      <div class="nf-pd-section__label-col">
+        <h2 class="nf-pd-section__label" id="problem-heading">THE PROBLEM</h2>
+      </div>
+      <div class="nf-pd-problem__flow">
+        {product.problem && <p class="nf-pd-problem__text">{product.problem}</p>}
+        <div class="nf-pd-bridge" aria-hidden="true">
+          <span class="nf-pd-bridge__line"></span>
+          <span class="nf-pd-bridge__arrow">↓</span>
+        </div>
+        <div class="nf-pd-bridge__system">
+          <span class="nf-pd-bridge__meta">THE SYSTEM</span>
+          <span class="nf-pd-bridge__name">{product.name.toUpperCase()}</span>
+        </div>
+        {product.solution && (
+          <>
+            <div class="nf-pd-bridge" aria-hidden="true">
+              <span class="nf-pd-bridge__line"></span>
+              <span class="nf-pd-bridge__arrow">↓</span>
+            </div>
+            <div class="nf-pd-bridge__result">
+              <span class="nf-pd-bridge__meta">RESULT</span>
+              <p>{product.solution}</p>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="nf-pd-section nf-pd-system" aria-labelledby="system-heading">
+    <div class="nf-container">
+      <div class="nf-pd-system__intro">
+        <h2 class="nf-pd-section__label" id="system-heading">THE SYSTEM</h2>
+        {product.description && <p class="nf-pd-system__copy">{product.description}</p>}
+      </div>
+
+      <div class="nf-pd-system__visual">
+        <ProductInterface slug={product.slug} variant="system" />
+      </div>
+    </div>
+  </section>
+
+  {product.workflow.length > 0 && (
+    <section class="nf-pd-section nf-pd-workflow" aria-labelledby="workflow-heading">
+      <div class="nf-container">
+        <h2 class="nf-pd-section__label" id="workflow-heading">HOW IT WORKS</h2>
+        <ol class="nf-pd-workflow__track" data-workflow-track>
+          {product.workflow.map((step, index) => (
+            <li class="nf-pd-workflow__step" style={`--step-index: ${index}`}>
+              <span class="nf-pd-workflow__fragment" aria-hidden="true"></span>
+              <span class="nf-pd-workflow__label">{step}</span>
+              {index < product.workflow.length - 1 && (
+                <span class="nf-pd-workflow__connector" aria-hidden="true">→</span>
+              )}
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  {connects.length > 0 && (
+    <section class="nf-pd-section nf-pd-connects" aria-labelledby="connects-heading">
+      <div class="nf-container">
+        <h2 class="nf-pd-section__label" id="connects-heading">WHAT IT BRINGS TOGETHER</h2>
+        <ul class="nf-pd-connects__list">
+          {connects.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {featureList.length > 0 && (
+    <section class="nf-pd-section nf-pd-features" aria-labelledby="features-heading">
+      <div class="nf-container nf-pd-features__grid">
+        <div>
+          <h2 class="nf-pd-section__label" id="features-heading">FEATURES</h2>
+          <ul class="nf-pd-features__list">
+            {featureList.map((feature) => (
+              <li>{feature.toUpperCase()}</li>
+            ))}
+          </ul>
+        </div>
+        <div class="nf-pd-features__visual" aria-hidden="true">
+          <ProductInterface slug={product.slug} variant="system" />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="nf-pd-section nf-pd-visuals" aria-labelledby="visuals-heading">
+    <div class="nf-container">
+      <h2 class="nf-pd-section__label" id="visuals-heading">PRODUCT VISUALS</h2>
+
+      {product.screenshots.length > 0 ? (
+        <div class="nf-pd-gallery" data-product-gallery>
+          {product.screenshots.map((shot, index) => (
+            <figure class="nf-pd-gallery__item" data-gallery-item={index}>
+              <img
+                src={shot.url}
+                alt={shot.altText ?? shot.screenTitle ?? `${product.name} screenshot ${index + 1}`}
+                width={shot.width ?? 1600}
+                height={shot.height ?? 980}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+              {(shot.screenTitle || shot.caption) && (
+                <figcaption>
+                  {shot.screenTitle && <strong>{shot.screenTitle}</strong>}
+                  {shot.caption && <span>{shot.caption}</span>}
+                </figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      ) : (
+        <div class="nf-pd-visuals__sequence">
+          <div class="nf-pd-visuals__desktop" aria-label={`${product.name} interface composition`}>
+            <ProductInterface slug={product.slug} variant="gallery" />
+          </div>
+          <div class="nf-pd-visuals__mobile" aria-label={`${product.name} mobile interface panels`}>
+            {mobilePanels.map((focus) => (
+              <div class="nf-pd-visuals__panel">
+                <ProductInterface slug={product.slug} variant="gallery" focus={focus} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+
+  {product.industryItems.length > 0 && (
+    <section class="nf-pd-section nf-pd-industries" aria-labelledby="industries-heading">
+      <div class="nf-container">
+        <h2 class="nf-pd-section__label" id="industries-heading">BUILT FOR</h2>
+        <ul class="nf-pd-industries__list">
+          {product.industryItems.map((industry) => (
+            <li>
+              <a href={`/industries/${industry.slug}`}>{industry.name}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  {product.relatedCaseStudies.length > 0 && (
+    <section class="nf-pd-section nf-pd-related" aria-labelledby="related-heading">
+      <div class="nf-container">
+        <h2 class="nf-pd-section__label" id="related-heading">RELATED WORK</h2>
+        <ul class="nf-pd-related__list">
+          {product.relatedCaseStudies.map((study) => (
+            <li class="nf-pd-related__item">
+              <a href={`/case-studies/${study.slug}`}>
+                <span class="nf-pd-related__title">{study.title}</span>
+                {(study.client || study.industry) && (
+                  <span class="nf-pd-related__meta">
+                    {[study.client, study.industry].filter(Boolean).join(' · ')}
+                  </span>
+                )}
+                {study.summary && <span class="nf-pd-related__summary">{study.summary}</span>}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="nf-section nf-cta nf-pd-cta" aria-label="Contact call to action">
+    <div class="nf-container">
+      <div class="nf-cta__panel">
+        <p class="nf-eyebrow nf-cta__eyebrow">CONTACT</p>
+        <h2 class="nf-cta__title">LET'S BUILD.</h2>
+        <p class="nf-cta__copy">Build your own system.</p>
+        <div class="nf-cta__actions">
+          <a class="nf-button nf-button--primary nf-cta__button" href={projectContactHref}>START A PROJECT ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</article>

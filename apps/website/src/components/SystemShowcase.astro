@@ -1,0 +1,241 @@
+---
+const systems = [
+  {
+    slug: 'isp-billing',
+    label: 'ISP BILLING',
+    title: ['ISP', 'BILLING'],
+    description: 'Subscribers. Billing. Payments.',
+    kicker: 'ISP BILLING SYSTEMS',
+    accent: 'navy'
+  },
+  {
+    slug: 'pharmacy-pos',
+    label: 'PHARMACY POS',
+    title: ['PHARMACY', 'POS'],
+    description: 'Medicine. Stock. Sales.',
+    kicker: 'PHARMACY POS',
+    accent: 'orange'
+  },
+  {
+    slug: 'retail-pos',
+    label: 'RETAIL POS',
+    title: ['RETAIL', 'POS'],
+    description: 'Sell. Track. Manage.',
+    kicker: 'RETAIL POS',
+    accent: 'navy'
+  },
+  {
+    slug: 'business-systems',
+    label: 'BUSINESS SYSTEMS',
+    title: ['BUSINESS', 'SYSTEMS'],
+    description: 'Customers. Operations. Management.',
+    kicker: 'BUSINESS MANAGEMENT SYSTEMS',
+    accent: 'navy'
+  },
+  {
+    slug: 'custom-systems',
+    label: 'CUSTOM SYSTEMS',
+    title: ['CUSTOM', 'SYSTEMS'],
+    description: 'Built around your business.',
+    kicker: 'CUSTOM BUSINESS SOFTWARE',
+    accent: 'orange'
+  },
+  {
+    slug: 'automation',
+    label: 'AI & AUTOMATION',
+    title: ['AI', 'AUTOMATION'],
+    description: 'Connect the work. Remove the repetition.',
+    kicker: 'AI & AUTOMATION',
+    accent: 'navy'
+  },
+  {
+    slug: 'integrations',
+    label: 'INTEGRATIONS',
+    title: ['INTEGRATIONS'],
+    description: 'Systems that talk to each other.',
+    kicker: 'INTEGRATIONS',
+    accent: 'orange'
+  }
+];
+---
+
+<section class="nf-systems-showcase" aria-labelledby="systems-showcase-title">
+  <header class="nf-systems-showcase__header nf-container">
+    <div class="nf-systems-showcase__meta">
+      <span class="nf-systems-showcase__index">02</span>
+      <span class="nf-systems-showcase__line"></span>
+    </div>
+
+    <div class="nf-systems-showcase__title-wrap">
+      <p class="nf-systems-showcase__eyebrow">Systems for real business</p>
+      <h2 id="systems-showcase-title" class="nf-systems-showcase__title">SYSTEMS FOR<br />REAL BUSINESS</h2>
+      <p class="nf-systems-showcase__lede">Different businesses.<br />Different problems.<br />Different systems.</p>
+    </div>
+  </header>
+
+  <nav class="nf-systems-showcase__selector nf-container" aria-label="System categories">
+    {systems.map((system) => (
+      <a class="nf-systems-showcase__chip" href={`#${system.slug}`}>
+        {system.label}
+      </a>
+    ))}
+  </nav>
+
+  <div class="nf-systems-showcase__stack">
+    {systems.map((system, index) => (
+      <article id={system.slug} class={`nf-system nf-system--${system.slug} ${index === 0 ? 'is-active' : ''}`}>
+        <div class="nf-system__inner nf-container">
+          <div class="nf-system__copy">
+            <span class="nf-system__kicker">{system.kicker}</span>
+            <h3 class="nf-system__title">
+              {system.title.map((line) => (
+                <span>{line}</span>
+              ))}
+            </h3>
+            <p class="nf-system__description">{system.description}</p>
+          </div>
+
+          <div class="nf-system__visual" aria-hidden="true">
+            {system.slug === 'isp-billing' && (
+              <div class="nf-billing-visual">
+                <div class="nf-billing-visual__header">
+                  <span>NOVAFLOW</span>
+                  <span>LIVE</span>
+                </div>
+                <div class="nf-billing-visual__body">
+                  <aside class="nf-billing-visual__sidebar">
+                    <span>Subscribers</span>
+                    <span class="is-active">Billing</span>
+                    <span>Packages</span>
+                    <span>Payments</span>
+                    <span>Usage</span>
+                  </aside>
+                  <div class="nf-billing-visual__panel">
+                    <div class="nf-billing-visual__stats">
+                      <div>
+                        <small>Active sessions</small>
+                        <strong>2,410</strong>
+                      </div>
+                      <div class="is-primary">
+                        <small>Invoices</small>
+                        <strong>184</strong>
+                      </div>
+                    </div>
+                    <div class="nf-billing-visual__table">
+                      <span>PPPoE</span>
+                      <span>Hotspot</span>
+                      <span>Radius</span>
+                      <span>Network</span>
+                    </div>
+                    <div class="nf-billing-visual__bars">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {system.slug === 'pharmacy-pos' && (
+              <div class="nf-pharmacy-visual">
+                <div class="nf-pharmacy-visual__top">
+                  <span>PHARMACY</span>
+                  <span>POS</span>
+                </div>
+                <div class="nf-pharmacy-visual__body">
+                  <div class="nf-pharmacy-visual__list">
+                    <span>Medicine</span>
+                    <span>SKU</span>
+                    <span>Batch</span>
+                    <span>Expiry</span>
+                  </div>
+                  <div class="nf-pharmacy-visual__card">
+                    <div class="nf-pharmacy-visual__pill">Prescription</div>
+                    <div class="nf-pharmacy-visual__row"></div>
+                    <div class="nf-pharmacy-visual__row nf-pharmacy-visual__row--short"></div>
+                    <div class="nf-pharmacy-visual__amount">$248.40</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {system.slug === 'retail-pos' && (
+              <div class="nf-retail-visual">
+                <div class="nf-retail-visual__header">
+                  <span>SALE</span>
+                  <span>01:24</span>
+                </div>
+                <div class="nf-retail-visual__grid">
+                  <div class="nf-retail-visual__products">
+                    <span>Chips</span>
+                    <span>Soap</span>
+                    <span>Milk</span>
+                    <span>Water</span>
+                  </div>
+                  <div class="nf-retail-visual__cart">
+                    <div class="nf-retail-visual__cart-row"></div>
+                    <div class="nf-retail-visual__cart-row nf-retail-visual__cart-row--short"></div>
+                    <div class="nf-retail-visual__cart-total">$72.40</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {system.slug === 'business-systems' && (
+              <div class="nf-management-visual">
+                <div class="nf-management-visual__panel">
+                  <span>Customers</span>
+                  <span>Orders</span>
+                  <span>Tasks</span>
+                </div>
+                <div class="nf-management-visual__flow">
+                  <span>Inventory</span>
+                  <span>Reports</span>
+                  <span>Operations</span>
+                </div>
+              </div>
+            )}
+
+            {system.slug === 'custom-systems' && (
+              <div class="nf-custom-visual">
+                <div class="nf-custom-visual__nodes">
+                  <span>CRM</span>
+                  <span>ERP</span>
+                  <span>PAYMENTS</span>
+                  <span>WORKFLOWS</span>
+                  <span>DATA</span>
+                  <span>AI</span>
+                </div>
+              </div>
+            )}
+
+            {system.slug === 'automation' && (
+              <div class="nf-automation-visual-system">
+                <span>AI</span>
+                <span>APIs</span>
+                <span>MESSAGING</span>
+                <span>PAYMENTS</span>
+                <span>DATA</span>
+                <span>WORKFLOWS</span>
+              </div>
+            )}
+
+            {system.slug === 'integrations' && (
+              <div class="nf-integration-visual">
+                <span>STRIPE</span>
+                <span>WHATSAPP</span>
+                <span>ERP</span>
+                <span>CRM</span>
+                <span>SMS</span>
+                <span>API</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

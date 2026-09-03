@@ -1,0 +1,30 @@
+{
+  "name": "@novaflow/api",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --noEmit && tsup src/index.ts --format esm --target node18 --out-dir dist",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1121.0",
+    "@hono/node-server": "^1.0.0",
+    "@novaflow/config": "workspace:*",
+    "@novaflow/database": "workspace:*",
+    "@novaflow/types": "workspace:*",
+    "@novaflow/validation": "workspace:*",
+    "argon2": "^0.45.1",
+    "drizzle-orm": "^0.36.0",
+    "hono": "^4.6.12",
+    "jose": "^6.2.10",
+    "postgres": "^3.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "tsup": "^8.1.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

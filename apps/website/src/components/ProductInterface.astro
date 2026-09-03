@@ -1,0 +1,144 @@
+---
+interface Props {
+  slug: string;
+  variant?: 'hero' | 'system' | 'gallery';
+  focus?: string;
+  class?: string;
+}
+
+const { slug, variant = 'hero', focus, class: className = '' } = Astro.props;
+
+const slugClass =
+  slug === 'bytepesa' ? 'bytepesa' : slug === 'techlane' ? 'techlane' : slug === 'apinai-air' ? 'apinai' : 'bytepesa';
+---
+
+<div
+  class={`nf-product-ui nf-product-ui--${slugClass} nf-pd-ui nf-pd-ui--${variant} ${focus ? `nf-pd-ui--focus-${focus}` : ''} ${className}`.trim()}
+  data-product-ui={slug}
+>
+  {slugClass === 'bytepesa' && (
+    <>
+      <div class="nf-product-ui__header">
+        <span>BYTEPESA</span>
+        <span>LIVE</span>
+      </div>
+      <div class="nf-product-ui__body">
+        <aside class="nf-product-ui__sidebar" aria-hidden="true">
+          <span class:list={[{ 'is-active': !focus || focus === 'subscribers' }]}>Subscribers</span>
+          <span class:list={[{ 'is-active': focus === 'billing' }]}>Billing</span>
+          <span class:list={[{ 'is-active': focus === 'payments' }]}>Payments</span>
+          <span class:list={[{ 'is-active': focus === 'packages' }]}>Packages</span>
+          <span>Invoices</span>
+          <span class:list={[{ 'is-active': focus === 'usage' }]}>Usage</span>
+        </aside>
+        <div class="nf-product-ui__main">
+          <div class="nf-product-ui__stats">
+            <div class:list={[{ 'is-primary': focus === 'subscribers' || !focus }]}>
+              <small>Active</small>
+              <strong>2,410</strong>
+            </div>
+            <div class:list={[{ 'is-primary': focus === 'billing' }]}>
+              <small>Invoices</small>
+              <strong>184</strong>
+            </div>
+          </div>
+          <div class="nf-product-ui__chart" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="nf-product-ui__rows" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </>
+  )}
+
+  {slugClass === 'techlane' && (
+    <>
+      <div class="nf-product-ui__header nf-product-ui__header--techlane">
+        <span>Sales</span>
+        <span>POS</span>
+      </div>
+      <div class="nf-product-ui__body nf-product-ui__body--techlane">
+        <div class="nf-product-ui__catalog" aria-hidden="true">
+          <span class:list={[{ 'is-active': !focus || focus === 'product' }]}>Liquids</span>
+          <span>Accessories</span>
+          <span>Services</span>
+          <span>Bundles</span>
+          <span>Offers</span>
+        </div>
+        <div class="nf-product-ui__checkout">
+          <div class="nf-product-ui__checkout-row">
+            <span>Wireless modem</span>
+            <strong>$89.00</strong>
+          </div>
+          <div class="nf-product-ui__checkout-row">
+            <span>Subscription</span>
+            <strong>$49.00</strong>
+          </div>
+          <div class="nf-product-ui__checkout-row" class:list={[{ 'is-highlight': focus === 'payment' }]}>
+            <span>Support</span>
+            <strong>$12.00</strong>
+          </div>
+          <div class="nf-product-ui__checkout-total" class:list={[{ 'is-highlight': focus === 'receipt' }]}>
+            <span>Total</span>
+            <strong>$150.00</strong>
+          </div>
+        </div>
+      </div>
+    </>
+  )}
+
+  {slugClass === 'apinai' && (
+    <>
+      <div class="nf-product-ui__header nf-product-ui__header--apinai">
+        <span>APINAI AIR</span>
+        <span>OPS</span>
+      </div>
+      <div class="nf-product-ui__body nf-product-ui__body--apinai">
+        <div class="nf-product-ui__route" aria-hidden="true">
+          <span class="nf-product-ui__route-node" class:list={[{ 'is-active': focus === 'search' }]}>NBO</span>
+          <span class="nf-product-ui__route-line"></span>
+          <span class="nf-product-ui__route-node">JNB</span>
+          <span class="nf-product-ui__route-line"></span>
+          <span class="nf-product-ui__route-node" class:list={[{ 'is-active': focus === 'ticket' }]}>LHR</span>
+        </div>
+        <div class="nf-product-ui__flight-panel">
+          <div class="nf-product-ui__flight-card" class:list={[{ 'is-highlight': focus === 'booking' }]}>
+            <small>Flight 104</small>
+            <strong>Nairobi → London</strong>
+            <span>Boarding / tickets / passenger ops</span>
+          </div>
+          <div class="nf-product-ui__flight-grid" aria-hidden="true">
+            <span class:list={[{ 'is-active': focus === 'search' }]}>Search</span>
+            <span>Passengers</span>
+            <span class:list={[{ 'is-active': focus === 'ticket' }]}>Tickets</span>
+            <span>Payments</span>
+          </div>
+        </div>
+      </div>
+    </>
+  )}
+</div>
+
+<style>
+  .nf-pd-ui--gallery {
+    transform: scale(0.92);
+    transform-origin: top left;
+  }
+
+  .nf-product-ui__catalog span.is-active,
+  .nf-product-ui__route-node.is-active,
+  .nf-product-ui__flight-grid span.is-active {
+    background: var(--nf-navy);
+    color: var(--nf-white);
+    border-color: var(--nf-navy);
+  }
+
+  .nf-product-ui__checkout-row.is-highlight,
+  .nf-product-ui__checkout-total.is-highlight,
+  .nf-product-ui__flight-card.is-highlight {
+    outline: 2px solid var(--nf-orange);
+    outline-offset: 2px;
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import IndustryDetail from '../../components/IndustryDetail.astro';
+import { getIndustryDetailList, getIndustryBySlug, resolveIndustrySeo } from '../../lib/api';
+import { getFallbackIndustries } from '../../lib/industry-fallback';
+import { getSiteBase } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const industries = await getIndustryDetailList();
+  const published = industries.filter((i) => i.status === 'published');
+  const source = published.length > 0 ? published : getFallbackIndustries();
+
+  return source.map((industry) => ({
+    params: { slug: industry.slug },
+    props: { slug: industry.slug },
+  }));
+}
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const industry = await getIndustryBySlug(slug);
+
+if (!industry || industry.status !== 'published') {
+  return Astro.redirect('/404');
+}
+
+const siteBase = getSiteBase(Astro.site);
+const seo = resolveIndustrySeo(industry, siteBase);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: industry.name,
+  description: industry.shortDescription ?? industry.businessContext,
+  url: seo.canonical,
+  about: {
+    '@type': 'Thing',
+    name: industry.name,
+  },
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'Novaflow',
+    url: siteBase,
+  },
+};
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  ogImage={seo.ogImage}
+  ogTitle={seo.ogTitle}
+  ogDescription={seo.ogDescription}
+  canonical={seo.canonical}
+  structuredData={structuredData}
+>
+  <div class="nf-page-shell nf-page-shell--industry">
+    <Navbar />
+    <main id="main-content" class="nf-page nf-page--industry">
+      <IndustryDetail industry={industry} />
+    </main>
+    <Footer />
+  </div>
+  <script>
+    import '../../scripts/industry-detail.ts';
+  </script>
+</BaseLayout>

@@ -1,0 +1,52 @@
+# Dependencies & build
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.astro/
+**/.astro/
+.turbo/
+**/.turbo/
+coverage/
+**/.cache/
+*.tsbuildinfo
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+
+# Local databases & dumps
+*.sqlite
+*.db
+*.dump
+*.sql.gz
+backups/
+
+# Logs & debug
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+
+# Test / temp
+tmp/
+temp/
+.upload/
+media-local/

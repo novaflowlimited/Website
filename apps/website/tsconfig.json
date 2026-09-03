@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "types": ["astro/client"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.astro", "astro.config.mjs"]
+}

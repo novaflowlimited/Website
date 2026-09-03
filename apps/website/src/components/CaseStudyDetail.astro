@@ -1,0 +1,161 @@
+---
+import type { CaseStudyDetail } from '../lib/api';
+import { groupEvidence } from '../lib/case-study';
+import { contactHref } from '../lib/contact-context';
+
+interface Props {
+  study: CaseStudyDetail;
+}
+
+const { study } = Astro.props;
+const workContactHref = contactHref(study.relatedProducts[0]?.slug ?? study.slug);
+const evidenceGroups = groupEvidence(study.evidence);
+const showOutcome = Boolean(study.result?.trim());
+const flowLabel =
+  study.direction === 'bytepesa'
+    ? 'Operations'
+    : study.direction === 'techlane'
+      ? 'Retail flow'
+      : study.direction === 'apinai'
+        ? 'Route'
+        : 'System';
+---
+
+<article class={`nf-cs nf-cs--${study.direction}`}>
+  <nav class="nf-cs-nav" aria-label="Case study">
+    <a class="nf-cs-nav__back" href="/case-studies">← Work</a>
+    <p class="nf-cs-nav__pager">
+      {study.previous ? <a href={`/case-studies/${study.previous.slug}`}>Previous</a> : <span>Previous</span>}
+      <span aria-hidden="true">/</span>
+      {study.next ? <a href={`/case-studies/${study.next.slug}`}>Next</a> : <span>Next</span>}
+    </p>
+  </nav>
+
+  <header class="nf-cs-hero">
+    <p class="nf-cs-hero__kicker">
+      <span>Case study</span>
+      {study.client && <span>{study.client}</span>}
+      {study.industry && <span>{study.industry}</span>}
+    </p>
+    <h1 class="nf-cs-hero__title">{study.title}</h1>
+    {study.summary && <p class="nf-cs-hero__line">{study.summary}</p>}
+    {study.visual ? (
+      <figure class="nf-cs-hero__visual">
+        <img
+          src={study.visual.url}
+          alt={study.visual.altText ?? ''}
+          width={study.visual.width ?? 1600}
+          height={study.visual.height ?? 900}
+          fetchpriority="high"
+          decoding="async"
+          sizes="100vw"
+        />
+      </figure>
+    ) : (
+      <div class="nf-cs-hero__type" aria-hidden="true">{study.title}</div>
+    )}
+  </header>
+
+  {study.challenge && (
+    <section class="nf-cs-block" aria-labelledby="cs-problem">
+      <h2 class="nf-cs-block__index" id="cs-problem">01 / Problem</h2>
+      <p class="nf-cs-block__copy">{study.challenge}</p>
+    </section>
+  )}
+
+  {study.approach && (
+    <section class="nf-cs-block nf-cs-block--approach" aria-labelledby="cs-approach">
+      <h2 class="nf-cs-block__index" id="cs-approach">02 / Approach</h2>
+      <p class="nf-cs-block__copy">{study.approach}</p>
+    </section>
+  )}
+
+  {study.solution && (
+    <section class="nf-cs-block nf-cs-block--system" aria-labelledby="cs-system">
+      <h2 class="nf-cs-block__index" id="cs-system">03 / System</h2>
+      <p class="nf-cs-block__copy">{study.solution}</p>
+      {study.relatedProducts[0] && (
+        <p class="nf-cs-block__product">
+          <a href={`/products/${study.relatedProducts[0].slug}`}>{study.relatedProducts[0].name} ↗</a>
+        </p>
+      )}
+    </section>
+  )}
+
+  {study.systemFlow.length > 0 && (
+    <section class={`nf-cs-flow nf-cs-flow--${study.direction}`} aria-label={flowLabel}>
+      <ol>
+        {study.systemFlow.map((step, index) => (
+          <li>
+            <span>{step}</span>
+            {index < study.systemFlow.length - 1 && <span class="nf-cs-flow__rule" aria-hidden="true" />}
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  {evidenceGroups.length > 0 && (
+    <section class="nf-cs-evidence" aria-label="Project visuals">
+      {evidenceGroups.map((group) => (
+        <figure class={`nf-cs-shot nf-cs-shot--${group.type}`}>
+          <div class="nf-cs-shot__frames">
+            {group.items.map((shot) => (
+              <img
+                src={shot.url}
+                alt={shot.altText ?? shot.caption ?? ''}
+                width={shot.width ?? 1400}
+                height={shot.height ?? 900}
+                loading="lazy"
+                decoding="async"
+              />
+            ))}
+          </div>
+          {group.items.some((shot) => shot.caption) && (
+            <figcaption>{group.items.map((shot) => shot.caption).filter(Boolean).join(' · ')}</figcaption>
+          )}
+        </figure>
+      ))}
+    </section>
+  )}
+
+  {showOutcome && (
+    <section class="nf-cs-block nf-cs-block--outcome" aria-labelledby="cs-outcome">
+      <p class="nf-cs-block__index" id="cs-outcome">04 / Outcome</p>
+      <p class="nf-cs-block__copy">{study.result}</p>
+    </section>
+  )}
+
+  {study.related.length > 0 && (
+    <section class="nf-cs-more" aria-labelledby="cs-more">
+      <h2 class="nf-cs-more__label" id="cs-more">More work</h2>
+      <ul class="nf-cs-more__list">
+        {study.related.map((item) => (
+          <li>
+            <a href={`/case-studies/${item.slug}`}>
+              {item.hero && (
+                <img src={item.hero.url} alt="" width={item.hero.width ?? 400} height={item.hero.height ?? 240} loading="lazy" />
+              )}
+              <span>
+                <strong>{item.title}</strong>
+                <em>{item.industry ?? 'Case study'}</em>
+              </span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section class="nf-section nf-cta nf-cs-cta" aria-label="Contact call to action">
+    <div class="nf-cta__panel">
+      <p class="nf-eyebrow nf-cta__eyebrow">Contact</p>
+      <h2 class="nf-cta__title">LET'S BUILD.</h2>
+      <p class="nf-cta__copy">Build something like this?</p>
+      <div class="nf-cta__actions">
+        <a class="nf-button nf-button--primary nf-cta__button" href={workContactHref}>START A PROJECT ↗</a>
+      </div>
+    </div>
+  </section>
+</article>

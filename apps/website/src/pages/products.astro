@@ -1,0 +1,319 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { getProducts } from '../lib/api';
+import type { ProductDetail } from '../lib/api';
+import { getSiteBase } from '../lib/site';
+
+const siteBase = getSiteBase(Astro.site);
+const products = await getProducts();
+const bySlug = Object.fromEntries(products.map((product) => [product.slug, product])) as Record<string, ProductDetail>;
+
+function productImage(slug: string) {
+  const product = bySlug[slug];
+  const media = product?.hero ?? product?.screenshots?.[0] ?? null;
+  if (!media?.url) return null;
+  return {
+    url: media.url,
+    alt: media.altText ?? media.title ?? product?.name ?? slug,
+    width: media.width ?? 1600,
+    height: media.height ?? 980,
+  };
+}
+
+const bytepesaImage = productImage('bytepesa');
+const techlaneImage = productImage('techlane');
+const apinaiImage = productImage('apinai-air');
+---
+
+<BaseLayout
+  title="Products | Novaflow"
+  description="Software systems built to solve real problems for service, retail, aviation and operations teams."
+  canonical={`${siteBase}/products`}
+>
+  <div class="nf-page-shell">
+    <Navbar />
+
+    <main id="main-content" class="nf-page">
+      <section class="nf-products" id="products" aria-label="Products">
+        <div class="nf-container">
+          <header class="nf-products__intro">
+            <p class="nf-products__index">02 / PRODUCTS</p>
+            <h1 class="nf-products__title">SOFTWARE<br />BUILT TO SOLVE<br />REAL PROBLEMS.</h1>
+          </header>
+
+          <article class="nf-product nf-product--bytepesa">
+            <div class="nf-product__meta">
+              <span class="nf-product__eyebrow">01 / PRODUCT</span>
+              <span class="nf-product__category">ISP BILLING &amp; MANAGEMENT</span>
+            </div>
+
+            <div class="nf-product__header">
+              <div>
+                <h2 class="nf-product__name">BYTEPESA</h2>
+                <p class="nf-product__subtitle">ISP BILLING<br />&amp; MANAGEMENT</p>
+              </div>
+              <a class="nf-product__link" href="/products/bytepesa">Explore BytePesa ↗</a>
+            </div>
+
+            <p class="nf-product__copy">Billing, subscribers, payments and network operations.</p>
+
+            <div class="nf-product__story">
+              <div class="nf-product__story-block">
+                <span class="nf-product__story-label">THE PROBLEM</span>
+                <p>ISPs shouldn't have to manage customers, billing and network operations across disconnected tools.</p>
+              </div>
+
+              <div class="nf-product__story-block">
+                <span class="nf-product__story-label">THE SYSTEM</span>
+                <p class="nf-product__story-system">BYTEPESA</p>
+              </div>
+
+              <div class="nf-product__story-block nf-product__story-block--solution">
+                <span class="nf-product__story-label">WHAT IT SOLVES</span>
+                <ul class="nf-product__solution-list">
+                  <li>Subscribers.</li>
+                  <li>Billing.</li>
+                  <li>Payments.</li>
+                  <li>Operations.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="nf-product__visual" aria-label="BytePesa billing product interface">
+              {bytepesaImage ? (
+                <img
+                  src={bytepesaImage.url}
+                  alt={bytepesaImage.alt}
+                  width={bytepesaImage.width}
+                  height={bytepesaImage.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+              <div class="nf-product-ui nf-product-ui--bytepesa">
+                <div class="nf-product-ui__header">
+                  <span>BYTEPESA</span>
+                  <span>LIVE</span>
+                </div>
+
+                <div class="nf-product-ui__body">
+                  <aside class="nf-product-ui__sidebar">
+                    <span>Subscribers</span>
+                    <span class="is-active">Billing</span>
+                    <span>Payments</span>
+                    <span>Packages</span>
+                    <span>Invoices</span>
+                    <span>Usage</span>
+                  </aside>
+
+                  <div class="nf-product-ui__main">
+                    <div class="nf-product-ui__stats">
+                      <div>
+                        <small>Active</small>
+                        <strong>2,410</strong>
+                      </div>
+                      <div class="is-primary">
+                        <small>Invoices</small>
+                        <strong>184</strong>
+                      </div>
+                    </div>
+
+                    <div class="nf-product-ui__chart">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+
+                    <div class="nf-product-ui__rows">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              )}
+            </div>
+          </article>
+
+          <article class="nf-product nf-product--techlane">
+            <div class="nf-product__meta">
+              <span class="nf-product__eyebrow">02 / PRODUCT</span>
+              <span class="nf-product__category">POS &amp; BUSINESS OPERATIONS</span>
+            </div>
+
+            <div class="nf-product__header nf-product__header--split">
+              <div>
+                <h2 class="nf-product__name">TECHLANE</h2>
+                <p class="nf-product__subtitle">POS &amp; BUSINESS<br />OPERATIONS</p>
+              </div>
+              <a class="nf-product__link" href="/products/techlane">Explore TechLane ↗</a>
+            </div>
+
+            <p class="nf-product__copy">Sales, inventory, payments and daily operations.</p>
+
+            <div class="nf-product__story">
+              <div class="nf-product__story-block">
+                <span class="nf-product__story-label">THE PROBLEM</span>
+                <p>Sales, stock and payments shouldn't live in separate places.</p>
+              </div>
+
+              <div class="nf-product__story-block">
+                <span class="nf-product__story-label">THE SYSTEM</span>
+                <p class="nf-product__story-system">TECHLANE</p>
+              </div>
+
+              <div class="nf-product__story-block nf-product__story-block--solution">
+                <span class="nf-product__story-label">WHAT IT SOLVES</span>
+                <ul class="nf-product__solution-list">
+                  <li>Sales.</li>
+                  <li>Inventory.</li>
+                  <li>Payments.</li>
+                  <li>Operations.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="nf-product__visual" aria-label="TechLane point of sale product interface">
+              {techlaneImage ? (
+                <img
+                  src={techlaneImage.url}
+                  alt={techlaneImage.alt}
+                  width={techlaneImage.width}
+                  height={techlaneImage.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+              <div class="nf-product-ui nf-product-ui--techlane">
+                <div class="nf-product-ui__header nf-product-ui__header--techlane">
+                  <span>Sales</span>
+                  <span>POS</span>
+                </div>
+
+                <div class="nf-product-ui__body nf-product-ui__body--techlane">
+                  <div class="nf-product-ui__catalog">
+                    <span>Liquids</span>
+                    <span>Accessories</span>
+                    <span>Services</span>
+                    <span>Bundles</span>
+                    <span>Offers</span>
+                  </div>
+
+                  <div class="nf-product-ui__checkout">
+                    <div class="nf-product-ui__checkout-row">
+                      <span>Wireless modem</span>
+                      <strong>$89.00</strong>
+                    </div>
+                    <div class="nf-product-ui__checkout-row">
+                      <span>Subscription</span>
+                      <strong>$49.00</strong>
+                    </div>
+                    <div class="nf-product-ui__checkout-row">
+                      <span>Support</span>
+                      <strong>$12.00</strong>
+                    </div>
+                    <div class="nf-product-ui__checkout-total">
+                      <span>Total</span>
+                      <strong>$150.00</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              )}
+            </div>
+          </article>
+
+          <article class="nf-product nf-product--apinai">
+            <div class="nf-product__meta">
+              <span class="nf-product__eyebrow">03 / PRODUCT</span>
+              <span class="nf-product__category">AVIATION PLATFORM</span>
+            </div>
+
+            <div class="nf-product__header nf-product__header--split">
+              <div>
+                <h2 class="nf-product__name">APINAI AIR</h2>
+                <p class="nf-product__subtitle">AVIATION OPERATIONS<br />&amp; BOOKINGS</p>
+              </div>
+              <a class="nf-product__link" href="/products/apinai-air">Explore Apinai Air ↗</a>
+            </div>
+
+            <p class="nf-product__copy">A digital platform for aviation operations, bookings and passenger services.</p>
+
+            <div class="nf-product__story">
+              <div class="nf-product__story-block">
+                <span class="nf-product__story-label">THE PROBLEM</span>
+                <p>Aviation operations need connected systems for bookings, passengers, payments and operations.</p>
+              </div>
+
+              <div class="nf-product__story-block">
+                <span class="nf-product__story-label">THE SYSTEM</span>
+                <p class="nf-product__story-system">APINAI AIR</p>
+              </div>
+
+              <div class="nf-product__story-block nf-product__story-block--solution">
+                <span class="nf-product__story-label">WHAT IT SOLVES</span>
+                <ul class="nf-product__solution-list">
+                  <li>Bookings.</li>
+                  <li>Passengers.</li>
+                  <li>Operations.</li>
+                  <li>Payments.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="nf-product__visual" aria-label="Apinai Air aviation platform interface">
+              {apinaiImage ? (
+                <img
+                  src={apinaiImage.url}
+                  alt={apinaiImage.alt}
+                  width={apinaiImage.width}
+                  height={apinaiImage.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+              <div class="nf-product-ui nf-product-ui--apinai">
+                <div class="nf-product-ui__header nf-product-ui__header--apinai">
+                  <span>APINAI AIR</span>
+                  <span>OPS</span>
+                </div>
+
+                <div class="nf-product-ui__body nf-product-ui__body--apinai">
+                  <div class="nf-product-ui__route">
+                    <span class="nf-product-ui__route-node">NBO</span>
+                    <span class="nf-product-ui__route-line"></span>
+                    <span class="nf-product-ui__route-node">JNB</span>
+                    <span class="nf-product-ui__route-line"></span>
+                    <span class="nf-product-ui__route-node">LHR</span>
+                  </div>
+
+                  <div class="nf-product-ui__flight-panel">
+                    <div class="nf-product-ui__flight-card">
+                      <small>Flight 104</small>
+                      <strong>Nairobi → London</strong>
+                      <span>Boarding / tickets / passenger ops</span>
+                    </div>
+                    <div class="nf-product-ui__flight-grid">
+                      <span>Search</span>
+                      <span>Passengers</span>
+                      <span>Tickets</span>
+                      <span>Payments</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              )}
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </div>
+</BaseLayout>

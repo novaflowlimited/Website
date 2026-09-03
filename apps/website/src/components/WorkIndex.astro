@@ -1,0 +1,54 @@
+---
+import type { PublicCaseStudy } from '../lib/api';
+import { folioLayout, padWorkIndex } from '../lib/case-study';
+
+interface Props {
+  studies: PublicCaseStudy[];
+}
+
+const { studies } = Astro.props;
+---
+
+{studies.length === 0 ? (
+  <p class="nf-folio__empty">Work coming soon.</p>
+) : (
+  <ol class="nf-folio-list">
+    {studies.map((study, index) => {
+      const layout = folioLayout(index, Boolean(study.visual));
+      const href = `/case-studies/${study.slug}`;
+      return (
+        <li>
+          <article class={`nf-folio-item nf-folio-item--${layout} nf-folio-item--${study.direction}`}>
+            <a class="nf-folio-item__link" href={href}>
+              <p class="nf-folio-item__index">{padWorkIndex(index)}</p>
+              <h2 class="nf-folio-item__title">{study.title}</h2>
+              {study.summary && <p class="nf-folio-item__line">{study.summary}</p>}
+              <p class="nf-folio-item__meta">
+                {[study.industry, study.client].filter(Boolean).join(' · ') || 'Case study'}
+                <span class="nf-folio-item__arrow" aria-hidden="true">↗</span>
+              </p>
+              {study.visual ? (
+                <figure class="nf-folio-item__visual">
+                  <img
+                    src={study.visual.url}
+                    alt={study.visual.altText ?? ''}
+                    width={study.visual.width ?? 1600}
+                    height={study.visual.height ?? 900}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    fetchpriority={index === 0 ? 'high' : undefined}
+                    decoding="async"
+                    sizes="(min-width: 1024px) 70vw, 100vw"
+                  />
+                </figure>
+              ) : (
+                <div class="nf-folio-item__type" aria-hidden="true">
+                  <span>{study.title}</span>
+                </div>
+              )}
+            </a>
+          </article>
+        </li>
+      );
+    })}
+  </ol>
+)}

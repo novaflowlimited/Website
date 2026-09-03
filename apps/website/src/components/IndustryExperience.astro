@@ -1,0 +1,48 @@
+---
+import type { HomepageForBusinessSection } from '../lib/api';
+
+interface Props {
+  section: HomepageForBusinessSection;
+}
+
+const { section } = Astro.props;
+
+const INDUSTRY_META: Record<string, string> = {
+  retail: 'POS · INVENTORY · PAYMENTS',
+  pharmacy: 'POS · STOCK · EXPIRY',
+  isp: 'BILLING · SUBSCRIBERS · NETWORK',
+  aviation: 'FLIGHTS · BOOKINGS · PASSENGERS',
+  hospitality: 'BOOKINGS · CUSTOMERS · OPERATIONS',
+  'professional-services': 'CLIENTS · PROJECTS · OPERATIONS',
+};
+
+const industries = section.items.map((item) => ({
+  id: item.slug,
+  name: item.name.toUpperCase(),
+  description: (INDUSTRY_META[item.slug] ?? item.shortDescription ?? '').toUpperCase(),
+  href: `/industries/${item.slug}`,
+}));
+---
+
+<section class="nf-industries" aria-label="For business">
+  <div class="nf-container">
+    <header class="nf-industries__intro">
+      <p class="nf-industries__index">{section.eyebrow}</p>
+      <h2 class="nf-industries__title">{section.headline}</h2>
+    </header>
+
+    <ul class="nf-industries__list" aria-label="Industries">
+      {industries.map((industry) => (
+        <li>
+          <a class="nf-industries__row" href={industry.href}>
+            <span class="nf-industries__name">{industry.name}</span>
+            {industry.description && (
+              <span class="nf-industries__meta">{industry.description}</span>
+            )}
+            <span class="nf-industries__arrow" aria-hidden="true">↗</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

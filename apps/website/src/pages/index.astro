@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import HomeHero from '../components/HomeHero.astro';
+import ServicesEditorial from '../components/ServicesEditorial.astro';
+import HomeProducts from '../components/HomeProducts.astro';
+import IndustryExperience from '../components/IndustryExperience.astro';
+import HomeWork from '../components/HomeWork.astro';
+import AboutNovaflow from '../components/AboutNovaflow.astro';
+import HomeContact from '../components/HomeContact.astro';
+import { getHomepage, getProducts, resolveHomepageSeo } from '../lib/api';
+import { absoluteUrl, getSiteBase } from '../lib/site';
+
+const siteBase = getSiteBase(Astro.site);
+const homepage = await getHomepage();
+const seo = resolveHomepageSeo(homepage, siteBase);
+
+const catalogProducts = await getProducts();
+const productsSection = {
+  ...homepage.products,
+  visible: true,
+  items:
+    homepage.products.items.length > 0
+      ? homepage.products.items
+      : catalogProducts.slice(0, 3).map((product) => ({
+          id: product.id,
+          name: product.name,
+          slug: product.slug,
+          category: product.category,
+          shortDescription: product.shortDescription,
+          hero: null,
+        })),
+};
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${siteBase}/#organization`,
+      name: 'Novaflow',
+      url: siteBase,
+      logo: absoluteUrl('/favicon.svg', siteBase),
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${siteBase}/#website`,
+      url: siteBase,
+      name: 'Novaflow',
+      description: seo.description,
+      publisher: { '@id': `${siteBase}/#organization` },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  ogImage={seo.ogImage}
+  ogTitle={seo.ogTitle}
+  ogDescription={seo.ogDescription}
+  canonical={seo.canonical}
+  structuredData={structuredData}
+>
+  <div class="nf-page-shell">
+    <Navbar />
+
+    <main id="main-content" class="nf-page">
+      {homepage.hero.visible && <HomeHero hero={homepage.hero} />}
+      {homepage.whatWeBuild.visible && <ServicesEditorial section={homepage.whatWeBuild} />}
+      {productsSection.items.length > 0 && <HomeProducts section={productsSection} />}
+      {homepage.forBusiness.visible && homepage.forBusiness.items.length > 0 && (
+        <IndustryExperience section={homepage.forBusiness} />
+      )}
+      {homepage.work.visible && <HomeWork section={homepage.work} />}
+      {homepage.about.visible && <AboutNovaflow section={homepage.about} />}
+      {homepage.contact.visible && <HomeContact section={homepage.contact} />}
+    </main>
+
+    <Footer />
+  </div>
+</BaseLayout>

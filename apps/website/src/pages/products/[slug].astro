@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import ProductDetail from '../../components/ProductDetail.astro';
+import { getProducts, getProductBySlug, resolveProductSeo } from '../../lib/api';
+import { getFallbackProducts } from '../../lib/product-fallback';
+import { absoluteUrl, getSiteBase } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const products = await getProducts();
+  const published = products.filter((p) => p.status === 'published');
+  const source = published.length > 0 ? published : getFallbackProducts();
+
+  return source.map((product) => ({
+    params: { slug: product.slug },
+    props: { slug: product.slug },
+  }));
+}
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const product = await getProductBySlug(slug);
+
+if (!product || product.status !== 'published') {
+  return Astro.redirect('/404');
+}
+
+const siteBase = getSiteBase(Astro.site);
+const seo = resolveProductSeo(product, siteBase);
+
+const productImage = product.hero?.url ?? product.screenshots?.[0]?.url ?? null;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: product.name,
+  description: product.shortDescription ?? product.description,
+  url: seo.canonical,
+  applicationCategory: product.category ?? 'BusinessApplication',
+  operatingSystem: 'Web',
+  brand: {
+    '@type': 'Organization',
+    name: 'Novaflow',
+  },
+  ...(productImage ? { image: absoluteUrl(productImage, siteBase) } : {}),
+};
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  ogImage={seo.ogImage}
+  ogTitle={seo.ogTitle}
+  ogDescription={seo.ogDescription}
+  canonical={seo.canonical}
+  structuredData={structuredData}
+>
+  <div class="nf-page-shell nf-page-shell--product">
+    <Navbar />
+    <main id="main-content" class="nf-page nf-page--product">
+      <ProductDetail product={product} />
+    </main>
+    <Footer />
+  </div>
+  <script>
+    import '../../scripts/product-detail.ts';
+  </script>
+</BaseLayout>

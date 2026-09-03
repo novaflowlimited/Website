@@ -1,0 +1,108 @@
+---
+import { parseInlineTokens } from '../lib/article-content';
+
+interface ImageBlock {
+  id: string;
+  type: 'image';
+  caption?: string | null;
+  layout?: 'inline' | 'full';
+  url?: string | null;
+  altText?: string | null;
+  width?: number | null;
+  height?: number | null;
+}
+
+interface Props {
+  content: { blocks?: Array<Record<string, unknown> & { id: string; type: string }> } | null;
+}
+
+const { content } = Astro.props;
+const blocks = content?.blocks ?? [];
+
+function tokens(text: string) {
+  return parseInlineTokens(text ?? '');
+}
+---
+
+<div class="nf-ins-body">
+  {blocks.map((block) => {
+    if (block.type === 'heading') {
+      const text = String(block.text ?? '');
+      return block.level === 3 ? <h3 class="nf-ins-body__h3">{text}</h3> : <h2 class="nf-ins-body__h2">{text}</h2>;
+    }
+    if (block.type === 'paragraph') {
+      return (
+        <p class="nf-ins-body__p">
+          {tokens(String(block.text ?? '')).map((token) =>
+            token.type === 'link' ? <a href={token.href}>{token.value}</a> : token.value
+          )}
+        </p>
+      );
+    }
+    if (block.type === 'quote') {
+      return (
+        <blockquote class="nf-ins-body__quote">
+          <p>{String(block.text ?? '')}</p>
+          {block.attribution ? <cite>{String(block.attribution)}</cite> : null}
+        </blockquote>
+      );
+    }
+    if (block.type === 'list') {
+      const items = Array.isArray(block.items) ? block.items.map(String).filter(Boolean) : [];
+      const ListTag = block.ordered ? 'ol' : 'ul';
+      return (
+        <ListTag class="nf-ins-body__list">
+          {items.map((item) => (
+            <li>
+              {tokens(item).map((token) => (token.type === 'link' ? <a href={token.href}>{token.value}</a> : token.value))}
+            </li>
+          ))}
+        </ListTag>
+      );
+    }
+    if (block.type === 'code') {
+      return (
+        <pre class="nf-ins-body__code"><code>{String(block.code ?? '')}</code></pre>
+      );
+    }
+    if (block.type === 'image') {
+      const image = block as ImageBlock;
+      if (!image.url) return null;
+      return (
+        <figure class={`nf-ins-body__figure nf-ins-body__figure--${image.layout === 'full' ? 'full' : 'inline'}`}>
+          <img
+            src={image.url}
+            alt={image.altText || ''}
+            width={image.width ?? undefined}
+            height={image.height ?? undefined}
+            loading="lazy"
+            decoding="async"
+            sizes={image.layout === 'full' ? '100vw' : '(min-width: 900px) 42rem, 100vw'}
+          />
+          {image.caption ? <figcaption>{image.caption}</figcaption> : null}
+        </figure>
+      );
+    }
+    if (block.type === 'table') {
+      const headers = Array.isArray(block.headers) ? block.headers.map(String) : [];
+      const rows = Array.isArray(block.rows) ? block.rows : [];
+      return (
+        <div class="nf-ins-body__table-wrap">
+          <table class="nf-ins-body__table">
+            {headers.length > 0 && (
+              <thead>
+                <tr>{headers.map((cell) => <th>{cell}</th>)}</tr>
+              </thead>
+            )}
+            <tbody>
+              {rows.map((row) => (
+                <tr>{(Array.isArray(row) ? row : []).map((cell) => <td>{String(cell)}</td>)}</tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+    return null;
+  })}
+</div>

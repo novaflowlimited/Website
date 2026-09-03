@@ -1,0 +1,139 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import { getInsightCategories, getInsightsIndex } from '../../lib/api';
+import { formatInsightDate, padIndex } from '../../lib/article-content';
+import { getSiteBase } from '../../lib/site';
+
+const PAGE_SIZE = 8;
+const siteBase = getSiteBase(Astro.site);
+const configuredApi =
+  (import.meta.env.PUBLIC_API_URL as string | undefined) ||
+  process.env.PUBLIC_API_URL ||
+  process.env.API_URL ||
+  '';
+const publicApiUrl =
+  configuredApi && !/localhost|127\.0\.0\.1/i.test(configuredApi) ? configuredApi.replace(/\/$/, '') : '';
+const [categories, index] = await Promise.all([
+  getInsightCategories(),
+  getInsightsIndex({ limit: PAGE_SIZE, offset: 0 }),
+]);
+
+const featured = index.featured;
+const list = index.items.filter((item) => item.id !== featured?.id);
+const empty = index.total === 0;
+---
+
+<BaseLayout
+  title="Insights | Novaflow"
+  description="Thinking about business systems, technology, automation and software architecture."
+  canonical={`${siteBase}/insights`}
+  rssHref={`${siteBase}/insights/rss.xml`}
+>
+  <div class="nf-page-shell nf-page-shell--insights">
+    <Navbar />
+    <main id="main-content" class="nf-page nf-page--insights">
+      <section
+        class="nf-ins"
+        aria-labelledby="insights-heading"
+        data-insights-index
+        data-api={publicApiUrl}
+        data-page-size={PAGE_SIZE}
+        data-total={index.total}
+      >
+        <div class="nf-container nf-ins__inner">
+          <header class="nf-ins__intro">
+            <p class="nf-ins__eyebrow">05 / Insights</p>
+            <h1 class="nf-ins__title" id="insights-heading">
+              Thinking<br />about<br />systems.
+            </h1>
+          </header>
+
+          {empty ? (
+            <p class="nf-ins__empty">Insights coming soon.</p>
+          ) : (
+            <>
+              <div class="nf-ins__controls">
+                <label class="nf-ins__search">
+                  <span class="visually-hidden">Search insights</span>
+                  <input type="search" name="q" placeholder="Search" data-insights-search autocomplete="off" />
+                </label>
+                <div class="nf-ins__filters" role="group" aria-label="Filter by category">
+                  <button type="button" class="is-active" data-insights-filter="all">All</button>
+                  {categories.map((category) => (
+                    <button type="button" data-insights-filter={category.slug}>{category.name}</button>
+                  ))}
+                </div>
+                <label class="nf-ins__select">
+                  <span class="visually-hidden">Category</span>
+                  <select data-insights-select>
+                    <option value="all">All</option>
+                    {categories.map((category) => (
+                      <option value={category.slug}>{category.name}</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <div data-insights-results>
+                {featured && (
+                  <article class="nf-ins-featured">
+                    <p class="nf-ins-featured__label">Featured</p>
+                    {featured.hero && (
+                      <a class="nf-ins-featured__visual" href={`/insights/${featured.slug}`}>
+                        <img
+                          src={featured.hero.url}
+                          alt={featured.hero.altText ?? ''}
+                          width={featured.hero.width ?? 1600}
+                          height={featured.hero.height ?? 900}
+                          fetchpriority="high"
+                          decoding="async"
+                          sizes="(min-width: 1024px) 70vw, 100vw"
+                        />
+                      </a>
+                    )}
+                    <div class="nf-ins-featured__copy">
+                      <h2 class="nf-ins-featured__title">
+                        <a href={`/insights/${featured.slug}`}>{featured.title}</a>
+                      </h2>
+                      {featured.excerpt && <p class="nf-ins-featured__excerpt">{featured.excerpt}</p>}
+                      <p class="nf-ins-featured__meta">
+                        {featured.category?.name ?? 'Insights'}
+                        {featured.publishedAt && <> · {formatInsightDate(featured.publishedAt)}</>}
+                      </p>
+                      <a class="nf-ins-featured__link" href={`/insights/${featured.slug}`}>Read article ↗</a>
+                    </div>
+                  </article>
+                )}
+
+                <ol class="nf-ins-list" data-insights-list>
+                  {list.map((article, index) => (
+                    <li>
+                      <a class="nf-ins-list__item" href={`/insights/${article.slug}`}>
+                        <span class="nf-ins-list__index">{padIndex(index)}</span>
+                        <span class="nf-ins-list__body">
+                          <span class="nf-ins-list__title">{article.title}</span>
+                          <span class="nf-ins-list__meta">{article.category?.name ?? 'Insights'} · {article.readingTime} min</span>
+                        </span>
+                        <span class="nf-ins-list__arrow" aria-hidden="true">→</span>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              {index.total > list.length + (featured ? 1 : 0) && (
+                <button type="button" class="nf-ins__more" data-insights-more>Load more</button>
+              )}
+            </>
+          )}
+        </div>
+      </section>
+    </main>
+    <Footer />
+  </div>
+  <script>
+    import '../../scripts/insights-index.ts';
+  </script>
+</BaseLayout>

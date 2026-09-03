@@ -1,0 +1,46 @@
+---
+import type { HomepageWhatWeBuildSection } from '../lib/api';
+
+interface Props {
+  section: HomepageWhatWeBuildSection;
+}
+
+const { section } = Astro.props;
+
+const services = section.capabilities.map((capability) => ({
+  label: capability.name.toUpperCase(),
+  description: capability.shortDescription?.trim() || null,
+}));
+---
+
+<section class="nf-editorial" id="what-we-build" aria-label="What we build">
+  <header class="nf-editorial__header nf-container">
+    <span class="nf-editorial__index">{section.eyebrow}</span>
+    {section.headline && (
+      <h2 class="nf-editorial__title">
+        {section.headline.split('\n').map((line) => (
+          <>
+            {line}
+            <br />
+          </>
+        ))}
+      </h2>
+    )}
+  </header>
+
+  <div class="nf-container">
+    <ul class="nf-editorial__capabilities" aria-label="Capability list">
+      {services.map((service, index) => (
+        <li class="nf-editorial__capability">
+          <span class="nf-editorial__capability-index">{String(index + 1).padStart(2, '0')}</span>
+          <div class="nf-editorial__capability-body">
+            <p class="nf-editorial__capability-name">{service.label}</p>
+            {service.description && (
+              <p class="nf-editorial__capability-copy">{service.description}</p>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

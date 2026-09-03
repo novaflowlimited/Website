@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import CaseStudyDetail from '../../components/CaseStudyDetail.astro';
+import { getCaseStudies, getCaseStudyBySlug, resolveCaseStudySeo } from '../../lib/api';
+import { absoluteUrl, getSiteBase } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const studies = await getCaseStudies();
+  return studies.map((study) => ({
+    params: { slug: study.slug },
+    props: { slug: study.slug },
+  }));
+}
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const study = await getCaseStudyBySlug(slug);
+
+if (!study || study.status !== 'published') {
+  return Astro.redirect('/404');
+}
+
+const siteBase = getSiteBase(Astro.site);
+const seo = resolveCaseStudySeo(study, siteBase);
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: study.title,
+  description: seo.description,
+  url: seo.canonical,
+  image: absoluteUrl(seo.ogImage, siteBase),
+  about: study.industry,
+  creator: {
+    '@type': 'Organization',
+    name: 'Novaflow',
+  },
+};
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  ogImage={seo.ogImage}
+  ogTitle={seo.ogTitle}
+  ogDescription={seo.ogDescription}
+  canonical={seo.canonical}
+  structuredData={structuredData}
+>
+  <div class="nf-page-shell nf-page-shell--cs">
+    <Navbar />
+    <main id="main-content" class="nf-page nf-page--cs">
+      <div class="nf-container">
+        <CaseStudyDetail study={study} />
+      </div>
+    </main>
+    <Footer />
+  </div>
+</BaseLayout>

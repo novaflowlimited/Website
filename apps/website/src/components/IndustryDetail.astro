@@ -1,0 +1,150 @@
+---
+import type { IndustryDetail } from '../lib/api';
+import { industrySystemItems } from '../lib/api';
+import IndustryVisual from './IndustryVisual.astro';
+import IndustryProductRef from './IndustryProductRef.astro';
+import { contactHref } from '../lib/contact-context';
+
+interface Props {
+  industry: IndustryDetail;
+}
+
+const { industry } = Astro.props;
+const systemItems = industrySystemItems(industry);
+const headlineLines = industry.challengeHeadline?.split('\n').filter(Boolean) ?? [];
+const industryContactHref = contactHref(industry.slug);
+---
+
+<article class={`nf-id nf-id--${industry.slug}`} data-industry-slug={industry.slug}>
+  <header class="nf-id-hero">
+    <div class="nf-container nf-id-hero__inner">
+      <nav class="nf-id-nav" aria-label="Industry navigation">
+        <a class="nf-id-nav__link" href="/industries">Industries ↗</a>
+      </nav>
+
+      <div class="nf-id-hero__content">
+        <p class="nf-id-hero__index">01 / INDUSTRY</p>
+        <h1 class="nf-id-hero__name">{industry.name.toUpperCase()}</h1>
+        {industry.shortDescription && (
+          <p class="nf-id-hero__statement">{industry.shortDescription.toUpperCase()}</p>
+        )}
+      </div>
+
+      <div class="nf-id-hero__visual">
+        {industry.visual?.url ? (
+          <picture>
+            {industry.mobileVisual?.url && (
+              <source media="(max-width: 767px)" srcset={industry.mobileVisual.url} />
+            )}
+            <img
+              class="nf-id-hero__image"
+              src={industry.visual.url}
+              alt={industry.visual.altText ?? `${industry.name} operations visual`}
+              width={industry.visual.width ?? 1600}
+              height={industry.visual.height ?? 980}
+              loading="eager"
+              decoding="async"
+            />
+          </picture>
+        ) : (
+          <IndustryVisual slug={industry.slug} variant="hero" />
+        )}
+      </div>
+    </div>
+  </header>
+
+  {industry.businessContext && (
+    <section class="nf-id-section nf-id-business" aria-labelledby="business-heading">
+      <div class="nf-container nf-id-business__grid">
+        <h2 class="nf-id-section__label" id="business-heading">THE BUSINESS</h2>
+        <p class="nf-id-business__copy">{industry.businessContext}</p>
+      </div>
+    </section>
+  )}
+
+  {(headlineLines.length > 0 || industry.challenge) && (
+    <section class="nf-id-section nf-id-challenge" aria-labelledby="challenge-heading">
+      <div class="nf-container nf-id-challenge__grid">
+        <h2 class="nf-id-section__label" id="challenge-heading">THE CHALLENGE</h2>
+        <div class="nf-id-challenge__content">
+          {headlineLines.length > 0 && (
+            <p class="nf-id-challenge__headline" aria-hidden="true">
+              {headlineLines.map((line) => (
+                <span>{line}</span>
+              ))}
+            </p>
+          )}
+          {industry.challenge && <p class="nf-id-challenge__copy">{industry.challenge}</p>}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {(systemItems.length > 0 || industry.systemDescription) && (
+    <section class="nf-id-section nf-id-system" aria-labelledby="system-heading">
+      <div class="nf-container nf-id-system__grid">
+        <div>
+          <h2 class="nf-id-section__label" id="system-heading">THE SYSTEM</h2>
+          {industry.systemDescription && <p class="nf-id-system__copy">{industry.systemDescription}</p>}
+          {systemItems.length > 0 && (
+            <ul class="nf-id-system__list">
+              {systemItems.map((item) => (
+                <li>{item.toUpperCase()}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div class="nf-id-system__visual" aria-hidden="true">
+          <IndustryVisual slug={industry.slug} variant="inline" />
+        </div>
+      </div>
+    </section>
+  )}
+
+  {industry.relatedProductItems.length > 0 && (
+    <section class="nf-id-section nf-id-products" aria-labelledby="products-heading">
+      <div class="nf-container">
+        <h2 class="nf-id-section__label" id="products-heading">RELEVANT PRODUCTS</h2>
+        <div class="nf-id-products__list">
+          {industry.relatedProductItems.map((product) => (
+            <IndustryProductRef product={product} />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {industry.relatedCaseStudies.length > 0 && (
+    <section class="nf-id-section nf-id-related" aria-labelledby="related-heading">
+      <div class="nf-container">
+        <h2 class="nf-id-section__label" id="related-heading">RELATED WORK</h2>
+        <ul class="nf-id-related__list">
+          {industry.relatedCaseStudies.map((study) => (
+            <li class="nf-id-related__item">
+              <a href={`/case-studies/${study.slug}`}>
+                <span class="nf-id-related__client">{study.client ?? study.title}</span>
+                <span class="nf-id-related__title">{study.title}</span>
+                {study.summary && <span class="nf-id-related__summary">{study.summary}</span>}
+                <span class="nf-id-related__link">View project ↗</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <section class="nf-section nf-cta nf-id-cta" aria-label="Contact call to action">
+    <div class="nf-container">
+      <div class="nf-cta__panel">
+        <p class="nf-eyebrow nf-cta__eyebrow">CONTACT</p>
+        <h2 class="nf-cta__title">LET'S BUILD.</h2>
+        <p class="nf-cta__copy">Need a system for {industry.name.toLowerCase()}?</p>
+        <p class="nf-id-cta__sub">Start a conversation.</p>
+        <div class="nf-cta__actions">
+          <a class="nf-button nf-button--primary nf-cta__button" href={industryContactHref}>START A PROJECT ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</article>

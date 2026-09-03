@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import { getSiteBase } from '../lib/site';
+
+const siteBase = getSiteBase(Astro.site);
+---
+
+<BaseLayout
+  title="About | Novaflow"
+  description="Novaflow builds software systems around the way businesses actually work."
+  canonical={`${siteBase}/about`}
+>
+  <div class="nf-page-shell nf-page-shell--about">
+    <Navbar />
+
+    <main id="main-content" class="nf-page nf-page--about">
+      <section class="nf-about-page" aria-labelledby="about-page-title">
+        <div class="nf-container nf-about-page__layout">
+          <header class="nf-about-page__intro">
+            <p class="nf-about-page__eyebrow">05 / ABOUT</p>
+            <h1 class="nf-about-page__title" id="about-page-title">
+              We build<br />software<br />around the<br />business.
+            </h1>
+          </header>
+
+          <div class="nf-about-page__body">
+            <p class="nf-about-page__copy">
+              Novaflow builds software systems around the way businesses actually work — billing, POS, management platforms, automation and custom systems.
+            </p>
+            <p class="nf-about-page__meta">Products · Systems · Automation · Software</p>
+            <a class="nf-button nf-button--primary" href="/contact">Start a project ↗</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </div>
+</BaseLayout>

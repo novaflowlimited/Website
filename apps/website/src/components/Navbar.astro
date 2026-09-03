@@ -1,0 +1,123 @@
+---
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const links = [
+  { href: '/products', label: 'Products' },
+  { href: '/industries', label: 'Industries' },
+  { href: '/case-studies', label: 'Work' },
+  { href: '/about', label: 'About' },
+  { href: '/insights', label: 'Insights' },
+] as const;
+
+function isActive(href: string) {
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+---
+
+<header class="nf-header" data-header>
+  <div class="nf-container nf-header__inner">
+    <a href="/" class="nf-brand" aria-label="Novaflow home">
+      <span class="nf-brand__mark">NOVAFLOW</span>
+    </a>
+
+    <button class="nf-nav-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="primary-navigation">
+      <span>Menu</span>
+    </button>
+
+    <nav id="primary-navigation" class="nf-nav" data-nav aria-label="Primary navigation">
+      <button class="nf-nav-close" type="button" data-menu-close aria-label="Close navigation">×</button>
+      <ul class="nf-nav__list">
+        {links.map((link) => (
+          <li>
+            <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div class="nf-nav__footer">
+        <a href="/contact" class="nf-button nf-button--primary">Let’s Build ↗</a>
+      </div>
+    </nav>
+
+    <a href="/contact" class="nf-button nf-button--primary nf-header__cta">Let’s Build ↗</a>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    const header = document.querySelector('[data-header]');
+    const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    const closeButton = document.querySelector<HTMLButtonElement>('[data-menu-close]');
+    const nav = document.querySelector<HTMLElement>('[data-nav]');
+    const main = document.getElementById('main-content');
+    if (!header || !toggle || !nav) return;
+
+    let previouslyFocused: HTMLElement | null = null;
+
+    const focusables = () =>
+      Array.from(
+        nav.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'),
+      ).filter((el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true');
+
+    const setMenuState = (isOpen: boolean) => {
+      nav.classList.toggle('is-open', isOpen);
+      toggle.setAttribute('aria-expanded', String(isOpen));
+      document.body.classList.toggle('nf-menu-open', isOpen);
+      if (main) {
+        if (isOpen) main.setAttribute('inert', '');
+        else main.removeAttribute('inert');
+      }
+
+      if (isOpen) {
+        previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : toggle;
+        const first = focusables()[0];
+        first?.focus();
+      } else if (previouslyFocused) {
+        previouslyFocused.focus();
+        previouslyFocused = null;
+      }
+    };
+
+    const updateHeaderState = () => {
+      header.classList.toggle('is-scrolled', window.scrollY > 12);
+    };
+
+    toggle.addEventListener('click', () => {
+      setMenuState(!nav.classList.contains('is-open'));
+    });
+
+    closeButton?.addEventListener('click', () => setMenuState(false));
+
+    nav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => setMenuState(false));
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!nav.classList.contains('is-open')) return;
+      if (event.key === 'Escape') {
+        setMenuState(false);
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    updateHeaderState();
+    window.addEventListener('scroll', updateHeaderState, { passive: true });
+  }
+
+  initHeader();
+  document.addEventListener('astro:page-load', initHeader);
+</script>

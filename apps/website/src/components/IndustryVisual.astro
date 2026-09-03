@@ -1,0 +1,141 @@
+---
+interface Props {
+  slug: string;
+  variant?: 'hero' | 'inline';
+  class?: string;
+}
+
+const { slug, variant = 'hero', class: className = '' } = Astro.props;
+---
+
+<article
+  class={`nf-industry-panel is-active nf-id-visual nf-id-visual--${slug} nf-id-visual--${variant} ${className}`.trim()}
+  aria-label={`${slug.replace(/-/g, ' ')} industry visual`}
+>
+  {slug === 'retail' && (
+    <>
+      <div class="nf-industry-panel__header"><span>RETAIL</span><span>POS</span></div>
+      <div class="nf-industry-panel__body nf-industry-panel__body--retail">
+        <aside class="nf-industry-panel__sidebar" aria-hidden="true">
+          <span>Products</span><span class="is-active">Inventory</span><span>Cart</span><span>Payments</span><span>Receipts</span>
+        </aside>
+        <div class="nf-industry-panel__main">
+          <div class="nf-industry-panel__catalog"><span>Snacks</span><span>Hardware</span><span>Accessories</span></div>
+          <div class="nf-industry-panel__checkout">
+            <div class="nf-industry-panel__row"><span>Wireless modem</span><strong>$89</strong></div>
+            <div class="nf-industry-panel__row"><span>Service pack</span><strong>$49</strong></div>
+            <div class="nf-industry-panel__total"><span>Total</span><strong>$150</strong></div>
+          </div>
+        </div>
+      </div>
+    </>
+  )}
+
+  {slug === 'pharmacy' && (
+    <>
+      <div class="nf-industry-panel__header"><span>PHARMACY</span><span>POS</span></div>
+      <div class="nf-industry-panel__body nf-industry-panel__body--pharmacy">
+        <aside class="nf-industry-panel__sidebar" aria-hidden="true">
+          <span>Medicine</span><span class="is-active">Stock</span><span>Batch</span><span>Expiry</span><span>Suppliers</span>
+        </aside>
+        <div class="nf-industry-panel__main">
+          <div class="nf-industry-panel__meds"><span>Paracetamol</span><span>Vitamin C</span><span>Antibiotic</span></div>
+          <div class="nf-industry-panel__checkout">
+            <div class="nf-industry-panel__row"><span>Prescription</span><strong>Queue 04</strong></div>
+            <div class="nf-industry-panel__row"><span>Pickup</span><strong>12:30</strong></div>
+          </div>
+        </div>
+      </div>
+    </>
+  )}
+
+  {slug === 'isp' && (
+    <>
+      <div class="nf-industry-panel__header"><span>ISP</span><span>BILLING</span></div>
+      <div class="nf-industry-panel__body nf-industry-panel__body--isp">
+        <aside class="nf-industry-panel__sidebar" aria-hidden="true">
+          <span>Subscribers</span><span class="is-active">Billing</span><span>Plans</span><span>Usage</span><span>Network</span>
+        </aside>
+        <div class="nf-industry-panel__main">
+          <div class="nf-industry-panel__stats">
+            <div><small>Active</small><strong>2,410</strong></div>
+            <div class="is-primary"><small>Invoices</small><strong>184</strong></div>
+          </div>
+          <div class="nf-industry-panel__chart" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </>
+  )}
+
+  {slug === 'aviation' && (
+    <>
+      <div class="nf-industry-panel__header"><span>AVIATION</span><span>OPS</span></div>
+      <div class="nf-industry-panel__body nf-industry-panel__body--aviation">
+        <div class="nf-industry-panel__route" aria-hidden="true">
+          <span class="nf-industry-panel__route-node">NBO</span><span class="nf-industry-panel__route-line"></span>
+          <span class="nf-industry-panel__route-node">JNB</span><span class="nf-industry-panel__route-line"></span>
+          <span class="nf-industry-panel__route-node">LHR</span>
+        </div>
+        <div class="nf-industry-panel__main nf-industry-panel__main--aviation">
+          <div class="nf-industry-panel__flight-card">
+            <small>Flight 104</small><strong>Nairobi → London</strong><span>Boarding / tickets / passenger ops</span>
+          </div>
+          <div class="nf-industry-panel__flight-grid" aria-hidden="true"><span>Search</span><span>Passengers</span><span>Tickets</span><span>Payments</span></div>
+        </div>
+      </div>
+    </>
+  )}
+
+  {slug === 'hospitality' && (
+    <>
+      <div class="nf-industry-panel__header"><span>HOSPITALITY</span><span>BOOKINGS</span></div>
+      <div class="nf-industry-panel__body nf-industry-panel__body--hospitality">
+        <aside class="nf-industry-panel__sidebar" aria-hidden="true">
+          <span>Bookings</span><span class="is-active">Guests</span><span>Rooms</span><span>Revenue</span><span>Ops</span>
+        </aside>
+        <div class="nf-industry-panel__main">
+          <div class="nf-industry-panel__booking-grid"><span>Check in</span><span>Housekeeping</span><span>Dining</span><span>Payments</span></div>
+          <div class="nf-industry-panel__checkout">
+            <div class="nf-industry-panel__row"><span>Suite 204</span><strong>2 nights</strong></div>
+          </div>
+        </div>
+      </div>
+    </>
+  )}
+
+  {slug === 'professional-services' && (
+    <>
+      <div class="nf-industry-panel__header"><span>PROFESSIONAL SERVICES</span><span>WORKFLOW</span></div>
+      <div class="nf-industry-panel__body nf-industry-panel__body--professional">
+        <aside class="nf-industry-panel__sidebar" aria-hidden="true">
+          <span>Clients</span><span class="is-active">Projects</span><span>Workflow</span><span>Invoices</span><span>Reports</span>
+        </aside>
+        <div class="nf-industry-panel__main">
+          <div class="nf-industry-panel__project-list"><span>Client onboarding</span><span>Project board</span><span>Billing cycle</span></div>
+          <div class="nf-industry-panel__checkout">
+            <div class="nf-industry-panel__row"><span>Retainer</span><strong>$4,800</strong></div>
+          </div>
+        </div>
+      </div>
+    </>
+  )}
+</article>
+
+<style>
+  .nf-id-visual {
+    position: relative;
+    inset: auto;
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+    min-height: clamp(18rem, 34vw, 32rem);
+    border: 1px solid var(--nf-border);
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .nf-id-visual--inline {
+    min-height: clamp(14rem, 24vw, 20rem);
+    transform: scale(0.94);
+    transform-origin: top left;
+  }
+</style>

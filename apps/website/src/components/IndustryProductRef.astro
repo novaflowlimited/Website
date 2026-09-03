@@ -1,0 +1,26 @@
+---
+import type { ResolvedProductRef } from '../lib/api';
+import ProductInterface from './ProductInterface.astro';
+
+interface Props {
+  product: ResolvedProductRef;
+}
+
+const { product } = Astro.props;
+---
+
+<a class="nf-id-product-ref" href={`/products/${product.slug}`}>
+  <div class="nf-id-product-ref__meta">
+    <span class="nf-id-product-ref__label">PRODUCT</span>
+    <span class="nf-id-product-ref__name">{product.name.toUpperCase()}</span>
+    {product.category && <span class="nf-id-product-ref__category">{product.category.toUpperCase()}</span>}
+  </div>
+  <div class="nf-id-product-ref__visual" aria-hidden="true">
+    {product.hero?.url ? (
+      <img src={product.hero.url} alt="" width={product.hero.width ?? 800} height={product.hero.height ?? 500} loading="lazy" decoding="async" />
+    ) : (
+      <ProductInterface slug={product.slug} variant="gallery" />
+    )}
+  </div>
+  <span class="nf-id-product-ref__link">Explore ↗</span>
+</a>

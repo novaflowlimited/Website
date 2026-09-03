@@ -1,0 +1,64 @@
+---
+import { getSiteSettings } from '../lib/api';
+
+const settings = await getSiteSettings();
+const social = settings?.socialLinks ?? {};
+const linkedin = typeof social.linkedin === 'string' ? social.linkedin : null;
+const x = typeof social.x === 'string' ? social.x : null;
+const instagram = typeof social.instagram === 'string' ? social.instagram : null;
+const hasSocial = Boolean(linkedin || x || instagram);
+---
+
+<footer class="nf-footer">
+  <div class="nf-container nf-footer__inner">
+    <div class="nf-footer__intro">
+      <a href="/" class="nf-brand nf-brand--footer" aria-label="Novaflow home">
+        <span class="nf-brand__mark">NOVAFLOW</span>
+      </a>
+      <p class="nf-footer__tagline">Connect. Build. Innovate.</p>
+    </div>
+
+    <nav class="nf-footer__links" aria-label="Footer">
+      <div>
+        <p class="nf-footer__label">Explore</p>
+        <ul>
+          <li><a href="/products">Products</a></li>
+          <li><a href="/industries">Industries</a></li>
+          <li><a href="/case-studies">Work</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="nf-footer__label">Company</p>
+        <ul>
+          <li><a href="/about">About</a></li>
+          <li><a href="/insights">Insights</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+      {(hasSocial || settings?.contactEmail) && (
+        <div>
+          <p class="nf-footer__label">Connect</p>
+          <ul>
+            {settings?.contactEmail && (
+              <li><a href={`mailto:${settings.contactEmail}`}>{settings.contactEmail}</a></li>
+            )}
+            {linkedin && (
+              <li><a href={linkedin} target="_blank" rel="noreferrer">LinkedIn</a></li>
+            )}
+            {x && (
+              <li><a href={x} target="_blank" rel="noreferrer">X</a></li>
+            )}
+            {instagram && (
+              <li><a href={instagram} target="_blank" rel="noreferrer">Instagram</a></li>
+            )}
+          </ul>
+        </div>
+      )}
+    </nav>
+  </div>
+
+  <div class="nf-container nf-footer__bottom">
+    <span>© Novaflow Limited</span>
+    <span>Software systems for real operations.</span>
+  </div>
+</footer>

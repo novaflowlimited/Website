@@ -1,0 +1,103 @@
+---
+import type { HomepageHeroSection } from '../lib/api';
+
+interface Props {
+  hero: HomepageHeroSection;
+}
+
+const { hero } = Astro.props;
+
+function splitHeadline(line: string): { primary: string; accent: string } {
+  const parts = line.trim().split(/\s+/);
+  if (parts.length <= 1) return { primary: parts[0] ?? '', accent: '' };
+  return { primary: parts[0], accent: parts.slice(1).join(' ') };
+}
+
+const line1 = splitHeadline(hero.headlineLine1);
+const line2 = splitHeadline(hero.headlineLine2);
+const heroImage = hero.heroVisual?.url ?? null;
+const mobileHeroImage = hero.mobileHeroVisual?.url ?? heroImage;
+---
+
+<section class="nf-hero" id="hero-scroll">
+  <div class="nf-container nf-hero__inner">
+    <div class="nf-hero__layout">
+      <div class="nf-hero__content">
+        <p class="nf-hero__eyebrow">{hero.eyebrow}</p>
+        <h1 class="nf-hero__title nf-hero__title--stacked" aria-label={`${hero.headlineLine1} ${hero.headlineLine2}`}>
+          <span class="nf-hero__title--line">
+            <span>{line1.primary}</span>
+            {line1.accent && <span class="nf-hero__title--script">{line1.accent}</span>}
+          </span>
+          <span class="nf-hero__title--line nf-hero__title--line-secondary">
+            <span class="nf-hero__title--navy nf-hero__title--compact">{line2.primary}</span>
+            {line2.accent && (
+              <span class="nf-hero__title--script nf-hero__title--orange nf-hero__title--emphasis">{line2.accent}</span>
+            )}
+          </span>
+        </h1>
+
+        <p class="nf-hero__copy">{hero.supportingText}</p>
+
+        <div class="nf-hero__actions">
+          <a class="nf-button nf-button--primary" href={hero.primaryCtaUrl}>{hero.primaryCtaLabel}</a>
+        </div>
+      </div>
+
+      <div class="nf-hero__visual" aria-label="Novaflow interface preview">
+        {heroImage ? (
+          <picture class="nf-hero__visual-surface nf-hero__visual-surface--media">
+            {mobileHeroImage && mobileHeroImage !== heroImage && (
+              <source media="(max-width: 768px)" srcset={mobileHeroImage} />
+            )}
+            <img
+              src={heroImage}
+              alt={hero.heroVisual?.altText ?? hero.heroVisual?.title ?? 'Novaflow product interface'}
+              width={hero.heroVisual?.width ?? 1200}
+              height={hero.heroVisual?.height ?? 900}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </picture>
+        ) : (
+          <div class="nf-hero__visual-surface">
+            <div class="nf-hero__app-shell">
+              <div class="nf-hero__app-header">
+                <span>SUBSCRIBERS</span>
+                <span>LIVE</span>
+              </div>
+
+              <div class="nf-hero__app-body">
+                <aside class="nf-hero__sidebar">
+                  <span class="nf-hero__sidebar-block nf-hero__sidebar-block--active">Subscribers</span>
+                  <span class="nf-hero__sidebar-block">Billing</span>
+                  <span class="nf-hero__sidebar-block">Packages</span>
+                  <span class="nf-hero__sidebar-block">Payments</span>
+                  <span class="nf-hero__sidebar-block">Usage</span>
+                </aside>
+
+                <div class="nf-hero__panel">
+                  <div class="nf-hero__panel-row nf-hero__panel-row--wide"></div>
+                  <div class="nf-hero__panel-row nf-hero__panel-row--short"></div>
+                  <div class="nf-hero__chart" aria-hidden="true">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div class="nf-hero__scroll" aria-hidden="true">
+      <span>SCROLL ↓</span>
+    </div>
+  </div>
+</section>

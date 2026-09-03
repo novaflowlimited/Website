@@ -1,0 +1,56 @@
+---
+import type { HomepageProductsSection } from '../lib/api';
+import ProductInterface from './ProductInterface.astro';
+
+interface Props {
+  section: HomepageProductsSection;
+}
+
+const { section } = Astro.props;
+---
+
+<section class="nf-products" id="products" aria-label="Products">
+  <div class="nf-container">
+    <header class="nf-products__intro">
+      <p class="nf-products__index">{section.eyebrow}</p>
+      <h2 class="nf-products__title">{section.headline}</h2>
+    </header>
+
+    {
+      section.items.map((product, index) => (
+        <article class={`nf-product nf-product--${product.slug.replace(/-/g, '')}`}>
+          <div class="nf-product__meta">
+            <span class="nf-product__eyebrow">{String(index + 1).padStart(2, '0')} / PRODUCT</span>
+            {product.category && <span class="nf-product__category">{product.category}</span>}
+          </div>
+
+          <div class="nf-product__header">
+            <div>
+              <h2 class="nf-product__name">{product.name.toUpperCase()}</h2>
+            </div>
+            <a class="nf-product__link" href={`/products/${product.slug}`}>
+              Explore {product.name} ↗
+            </a>
+          </div>
+
+          {product.shortDescription && <p class="nf-product__copy">{product.shortDescription}</p>}
+
+          <div class="nf-product__visual" aria-label={`${product.name} product interface`}>
+            {product.hero ? (
+              <img
+                src={product.hero.url}
+                alt={product.hero.altText ?? product.hero.title ?? `${product.name} interface`}
+                width={product.hero.width ?? undefined}
+                height={product.hero.height ?? undefined}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <ProductInterface slug={product.slug} variant="hero" />
+            )}
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
